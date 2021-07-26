@@ -53,7 +53,6 @@ var UsersConrtoller = /** @class */ (function () {
                         result = _a.sent();
                         res.status(result.status).send(result.data);
                         res.end();
-                        console.log(result);
                         return [2 /*return*/];
                 }
             });
@@ -69,7 +68,6 @@ var UsersConrtoller = /** @class */ (function () {
                         result = _a.sent();
                         res.status(result.status).send(result.data);
                         res.end();
-                        console.log(result);
                         return [2 /*return*/];
                 }
             });

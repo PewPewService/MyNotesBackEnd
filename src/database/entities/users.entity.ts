@@ -1,6 +1,7 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
-
-@Entity("Users")
+/* eslint-disable new-cap */
+/* eslint-disable require-jsdoc */
+import {Column, Entity, PrimaryGeneratedColumn} from 'typeorm';
+@Entity('Users')
 export class UsersEntity {
     @PrimaryGeneratedColumn()
     id!: number;

@@ -46,35 +46,47 @@ var users_controller_1 = require("./controllers/users.controller");
 var Server = /** @class */ (function () {
     function Server() {
         this.app = express_1.default();
-        this.bodyParser = require("body-parser");
+        this.bodyParser = require('body-parser');
         this.configuration();
         this.routes();
     }
     Server.prototype.configuration = function () {
         this.app.set('port', process.env.PORT || 3000);
-        //this.app.use(express.json()); 
+        // this.app.use(express.json());
         this.app.use(this.bodyParser.json({ limit: '50mb', extended: true }));
         this.app.use(function (req, res, next) {
-            res.header("Access-Control-Allow-Origin", "*");
-            res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+            res.header('Access-Control-Allow-Origin', '*');
+            res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
             next();
         });
+        console.log(process.env);
     };
     Server.prototype.routes = function () {
         return __awaiter(this, void 0, void 0, function () {
+            var ConnType, ConnHost, ConnPort, ConnUser, ConnPassword, ConnDB, ConnEntities, ConnSync, ConnName;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, typeorm_1.createConnection({
-                            type: "postgres",
-                            host: "localhost",
-                            port: 5432,
-                            username: "dbUser",
-                            password: "0000",
-                            database: "MyNotes",
-                            entities: ["build/database/entities/**/*.js"],
-                            synchronize: true,
-                            name: "MyNotes"
-                        })];
+                    case 0:
+                        ConnType = String(process.env.NODE_CONNECTION_TYPE);
+                        ConnHost = String(process.env.NODE_CONNECTION_HOST);
+                        ConnPort = Number(process.env.NODE_CONNECTION_PORT);
+                        ConnUser = String(process.env.NODE_CONNECTION_USER);
+                        ConnPassword = String(process.env.NODE_CONNECTION_PASSWORD);
+                        ConnDB = String(process.env.NODE_CONNECTION_DB);
+                        ConnEntities = String(process.env.NODE_CONNECTION_ENTITIES);
+                        ConnSync = Boolean(process.env.NODE_CONNECTION_SYNCHRONIZE);
+                        ConnName = String(process.env.NODE_CONNECTION_NAME);
+                        return [4 /*yield*/, typeorm_1.createConnection({
+                                type: ConnType,
+                                host: ConnHost,
+                                port: ConnPort,
+                                username: ConnUser,
+                                password: ConnPassword,
+                                database: ConnDB,
+                                entities: [ConnEntities],
+                                synchronize: ConnSync,
+                                name: ConnName,
+                            })];
                     case 1:
                         _a.sent();
                         this.NotesController = new notes_controller_1.NotesController();

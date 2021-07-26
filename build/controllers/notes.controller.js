@@ -37,14 +37,17 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.NotesController = void 0;
+/* eslint-disable no-invalid-this */
+/* eslint-disable require-jsdoc */
+/* eslint-disable new-cap */
 var express_1 = require("express");
 var notes_service_1 = require("../services/notes.service");
 var users_service_1 = require("../services/users.service");
 var NotesController = /** @class */ (function () {
     function NotesController() {
         var _this = this;
-        this.base64img = require("node-base64-img");
-        this.UserControl = function (req, res, func) { return __awaiter(_this, void 0, void 0, function () {
+        this.base64img = require('node-base64-img');
+        this.userControl = function (req, res, func) { return __awaiter(_this, void 0, void 0, function () {
             var jwt, UserId;
             return __generator(this, function (_a) {
                 switch (_a.label) {
@@ -57,7 +60,7 @@ var NotesController = /** @class */ (function () {
                             func(req, res, Number(UserId.data));
                         }
                         else {
-                            res.status(400).send("Invalid token! Please, re-login.").json;
+                            res.status(400).send('Invalid token! Please, re-login.').json;
                             res.end();
                         }
                         return [2 /*return*/];
@@ -70,7 +73,7 @@ var NotesController = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         note = req.body.note;
-                        return [4 /*yield*/, this.notesService.AddNote(note, UserId)];
+                        return [4 /*yield*/, this.notesService.addNote(note, UserId)];
                     case 1:
                         NewNote = _a.sent();
                         res.status(NewNote.status).send(NewNote.data).json;
@@ -85,7 +88,7 @@ var NotesController = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         id = req.params.id;
-                        return [4 /*yield*/, this.notesService.GetNote(Number(id), UserId)];
+                        return [4 /*yield*/, this.notesService.getNote(Number(id), UserId)];
                     case 1:
                         note = _a.sent();
                         res.status(note.status).send(note.data).json;
@@ -100,7 +103,7 @@ var NotesController = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         NoteData = req.body.note;
-                        return [4 /*yield*/, this.notesService.EditNote(NoteData, UserId)];
+                        return [4 /*yield*/, this.notesService.editNote(NoteData, UserId)];
                     case 1:
                         EditedNote = _a.sent();
                         res.status(EditedNote.status).send(EditedNote.data).json;
@@ -115,7 +118,7 @@ var NotesController = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         id = req.params.id;
-                        return [4 /*yield*/, this.notesService.Duplicate(Number(id), UserId)];
+                        return [4 /*yield*/, this.notesService.duplicate(Number(id), UserId)];
                     case 1:
                         duplicate = _a.sent();
                         res.status(duplicate.status).send(duplicate.data).json;
@@ -130,7 +133,7 @@ var NotesController = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         id = req.params.id;
-                        return [4 /*yield*/, this.notesService.Delete(Number(id), UserId)];
+                        return [4 /*yield*/, this.notesService.delete(Number(id), UserId)];
                     case 1:
                         result = _a.sent();
                         res.status(result.status).send(result.data).json;
@@ -145,12 +148,11 @@ var NotesController = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         id = req.params.id;
-                        return [4 /*yield*/, this.notesService.PinNote(Number(id), UserId)];
+                        return [4 /*yield*/, this.notesService.pinNote(Number(id), UserId)];
                     case 1:
                         result = _a.sent();
                         res.status(result.status).send(result.data).json;
                         res.end();
-                        console.log(result);
                         return [2 /*return*/];
                 }
             });
@@ -163,7 +165,7 @@ var NotesController = /** @class */ (function () {
                         page = req.body.page;
                         pinned = req.body.pinned;
                         query = req.body.queryString;
-                        return [4 /*yield*/, this.notesService.GetNotes(UserId, Number(page), pinned, query)];
+                        return [4 /*yield*/, this.notesService.getNotes(UserId, Number(page), pinned, query)];
                     case 1:
                         result = _a.sent();
                         res.status(result.status).send(result.data).json;
@@ -179,13 +181,27 @@ var NotesController = /** @class */ (function () {
     }
     NotesController.prototype.routes = function () {
         var _this = this;
-        this.router.post('/getNotes', function (req, res) { _this.UserControl(req, res, _this.GetNotes); });
-        this.router.post('/getNote/:id', function (req, res) { _this.UserControl(req, res, _this.GetNote); });
-        this.router.post('/createNote', function (req, res) { _this.UserControl(req, res, _this.CreateNote); });
-        this.router.post('/editNote', function (req, res) { _this.UserControl(req, res, _this.EditNote); });
-        this.router.post('/duplicateNote/:id', function (req, res) { _this.UserControl(req, res, _this.DuplicateNote); });
-        this.router.post('/deleteNote/:id', function (req, res) { _this.UserControl(req, res, _this.DeleteNote); });
-        this.router.post('/pinNote/:id', function (req, res) { _this.UserControl(req, res, _this.PinNote); });
+        this.router.post('/getNotes', function (req, res) {
+            _this.userControl(req, res, _this.GetNotes);
+        });
+        this.router.post('/getNote/:id', function (req, res) {
+            _this.userControl(req, res, _this.GetNote);
+        });
+        this.router.post('/createNote', function (req, res) {
+            _this.userControl(req, res, _this.CreateNote);
+        });
+        this.router.post('/editNote', function (req, res) {
+            _this.userControl(req, res, _this.EditNote);
+        });
+        this.router.post('/duplicateNote/:id', function (req, res) {
+            _this.userControl(req, res, _this.DuplicateNote);
+        });
+        this.router.post('/deleteNote/:id', function (req, res) {
+            _this.userControl(req, res, _this.DeleteNote);
+        });
+        this.router.post('/pinNote/:id', function (req, res) {
+            _this.userControl(req, res, _this.PinNote);
+        });
     };
     return NotesController;
 }());

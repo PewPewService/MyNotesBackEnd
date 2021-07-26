@@ -58,6 +58,9 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.NotesRepository = void 0;
+/* eslint-disable new-cap */
+/* eslint-disable max-len */
+/* eslint-disable require-jsdoc */
 var typeorm_1 = require("typeorm");
 var notes_entity_1 = require("../database/entities/notes.entity");
 var NotesRepository = /** @class */ (function (_super) {
@@ -67,7 +70,7 @@ var NotesRepository = /** @class */ (function (_super) {
         _this.NotesOnPage = 10;
         return _this;
     }
-    NotesRepository.prototype.CountPages = function (query) {
+    NotesRepository.prototype.countPages = function (query) {
         return __awaiter(this, void 0, void 0, function () {
             var count, pages;
             return __generator(this, function (_a) {
@@ -83,21 +86,21 @@ var NotesRepository = /** @class */ (function (_super) {
             });
         });
     };
-    NotesRepository.prototype.GetNote = function (id, UserId) {
+    NotesRepository.prototype.getNote = function (id, UserId) {
         return __awaiter(this, void 0, void 0, function () {
             var note, err_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, this.createQueryBuilder("Notes")
+                        return [4 /*yield*/, this.createQueryBuilder('Notes')
                                 .select()
-                                .where("id = :id and Notes.userId = :userId", { id: id, userId: UserId })
+                                .where('id = :id and Notes.userId = :userId', { id: id, userId: UserId })
                                 .getOne()];
                     case 1:
                         note = _a.sent();
                         if (!note)
-                            return [2 /*return*/, { status: 400, data: "Note wasn't found" }];
+                            return [2 /*return*/, { status: 400, data: 'Note wasn\'t found' }];
                         return [2 /*return*/, { status: 200, data: note }];
                     case 2:
                         err_1 = _a.sent();
@@ -107,16 +110,16 @@ var NotesRepository = /** @class */ (function (_super) {
             });
         });
     };
-    NotesRepository.prototype.DuplicateNote = function (id, UserId) {
+    NotesRepository.prototype.duplicateNote = function (id, UserId) {
         return __awaiter(this, void 0, void 0, function () {
             var note;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.GetNote(id, UserId)];
+                    case 0: return [4 /*yield*/, this.getNote(id, UserId)];
                     case 1:
                         note = _a.sent();
                         if (!(note.status == 200)) return [3 /*break*/, 3];
-                        return [4 /*yield*/, this.createQueryBuilder("Notes")
+                        return [4 /*yield*/, this.createQueryBuilder('Notes')
                                 .insert()
                                 .values(note.data)
                                 .execute()];
@@ -128,29 +131,29 @@ var NotesRepository = /** @class */ (function (_super) {
             });
         });
     };
-    NotesRepository.prototype.FindNotes = function (UserId, page, pinned, query) {
+    NotesRepository.prototype.findNotes = function (UserId, page, pinned, query) {
         return __awaiter(this, void 0, void 0, function () {
             var queryString, i, queryValues, _i, _a, word, SendingQuery, notes;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
-                        queryString = "";
+                        queryString = '';
                         i = 0;
-                        queryValues = new Object;
-                        for (_i = 0, _a = query.split(" "); _i < _a.length; _i++) {
+                        queryValues = {};
+                        for (_i = 0, _a = query.split(' '); _i < _a.length; _i++) {
                             word = _a[_i];
-                            queryString += " and (name like :name" + i + " or text like :name" + i;
-                            queryValues["name" + i] = "%" + word + "%";
+                            queryString += ' and (name like :name' + i + ' or text like :name' + i;
+                            queryValues['name' + i] = '%' + word + '%';
                             i += 1;
-                            queryString += " or :name" + i + " = ANY(tags))";
-                            queryValues["name" + i] = word;
+                            queryString += ' or :name' + i + ' = ANY(tags))';
+                            queryValues['name' + i] = word;
                             i += 1;
                         }
                         SendingQuery = {};
                         if (query) {
-                            SendingQuery = { query: "1=1 " + queryString, values: queryValues };
+                            SendingQuery = { query: '1=1 ' + queryString, values: queryValues };
                         }
-                        return [4 /*yield*/, this.GetNotes(UserId, page, pinned, SendingQuery)];
+                        return [4 /*yield*/, this.getNotes(UserId, page, pinned, SendingQuery)];
                     case 1:
                         notes = _b.sent();
                         return [2 /*return*/, notes];
@@ -158,19 +161,19 @@ var NotesRepository = /** @class */ (function (_super) {
             });
         });
     };
-    NotesRepository.prototype.DeleteNote = function (id, UserId) {
+    NotesRepository.prototype.deleteNote = function (id, UserId) {
         return __awaiter(this, void 0, void 0, function () {
-            var result, err_2;
+            var err_2;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, this.createQueryBuilder("Notes")
+                        return [4 /*yield*/, this.createQueryBuilder('Notes')
                                 .delete()
-                                .where("id = :id and userId = :userId", { id: id, userId: UserId })
+                                .where('id = :id and userId = :userId', { id: id, userId: UserId })
                                 .execute()];
                     case 1:
-                        result = _a.sent();
+                        _a.sent();
                         return [2 /*return*/, { status: 200, data: 'Success!' }];
                     case 2:
                         err_2 = _a.sent();
@@ -180,25 +183,25 @@ var NotesRepository = /** @class */ (function (_super) {
             });
         });
     };
-    NotesRepository.prototype.PinNote = function (id, UserId) {
+    NotesRepository.prototype.pinNote = function (id, UserId) {
         return __awaiter(this, void 0, void 0, function () {
             var note, err_3;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 4, , 5]);
-                        return [4 /*yield*/, this.GetNote(id, UserId)];
+                        return [4 /*yield*/, this.getNote(id, UserId)];
                     case 1:
                         note = _a.sent();
                         if (!(note.status == 200)) return [3 /*break*/, 3];
-                        return [4 /*yield*/, this.createQueryBuilder("Notes")
+                        return [4 /*yield*/, this.createQueryBuilder('Notes')
                                 .update()
-                                .set({ "pinned": !note.data.pinned })
-                                .where("id = :id and userId = :userId", { id: id, userId: UserId })
+                                .set({ 'pinned': !note.data.pinned })
+                                .where('id = :id and userId = :userId', { id: id, userId: UserId })
                                 .execute()];
                     case 2:
                         _a.sent();
-                        return [2 /*return*/, { status: 200, data: "Success!" }];
+                        return [2 /*return*/, { status: 200, data: 'Success!' }];
                     case 3: return [2 /*return*/, note];
                     case 4:
                         err_3 = _a.sent();
@@ -208,14 +211,14 @@ var NotesRepository = /** @class */ (function (_super) {
             });
         });
     };
-    NotesRepository.prototype.AddNote = function (note, UserId) {
+    NotesRepository.prototype.addNote = function (note, UserId) {
         return __awaiter(this, void 0, void 0, function () {
-            var NewNote, err_4;
+            var err_4;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, this.createQueryBuilder("Notes")
+                        return [4 /*yield*/, this.createQueryBuilder('Notes')
                                 .insert()
                                 .values({
                                 name: note.name,
@@ -223,11 +226,11 @@ var NotesRepository = /** @class */ (function (_super) {
                                 images: note.images,
                                 tags: note.tags,
                                 userId: UserId,
-                                pinned: false
+                                pinned: false,
                             })
                                 .execute()];
                     case 1:
-                        NewNote = _a.sent();
+                        _a.sent();
                         return [2 /*return*/, { status: 200, data: 'The Note was successfully added!' }];
                     case 2:
                         err_4 = _a.sent();
@@ -237,23 +240,23 @@ var NotesRepository = /** @class */ (function (_super) {
             });
         });
     };
-    NotesRepository.prototype.EditNote = function (note, UserId) {
+    NotesRepository.prototype.editNote = function (note, UserId) {
         return __awaiter(this, void 0, void 0, function () {
             var EditedNote, err_5;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, this.createQueryBuilder("Notes")
+                        return [4 /*yield*/, this.createQueryBuilder('Notes')
                                 .update()
                                 .set({
                                 name: note.name,
                                 text: note.text,
                                 images: note.images,
                                 tags: note.tags,
-                                pinned: note.pinned
+                                pinned: note.pinned,
                             })
-                                .where("id = :id and userId = :userId", { id: note.id, userId: UserId })
+                                .where('id = :id and userId = :userId', { id: note.id, userId: UserId })
                                 .execute()];
                     case 1:
                         EditedNote = _a.sent();
@@ -266,7 +269,7 @@ var NotesRepository = /** @class */ (function (_super) {
             });
         });
     };
-    NotesRepository.prototype.GetNotes = function (UserId, page, pinned, where) {
+    NotesRepository.prototype.getNotes = function (UserId, page, pinned, where) {
         if (pinned === void 0) { pinned = false; }
         if (where === void 0) { where = {}; }
         return __awaiter(this, void 0, void 0, function () {
@@ -276,7 +279,7 @@ var NotesRepository = /** @class */ (function (_super) {
                     case 0:
                         _a.trys.push([0, 6, , 7]);
                         offset = page * this.NotesOnPage;
-                        return [4 /*yield*/, this.createQueryBuilder("Notes")
+                        return [4 /*yield*/, this.createQueryBuilder('Notes')
                                 .select()
                                 .where('Notes.userId = :userId and pinned = :pinned', { userId: UserId, pinned: pinned })];
                     case 1:
@@ -286,10 +289,10 @@ var NotesRepository = /** @class */ (function (_super) {
                     case 2:
                         notes = _a.sent();
                         _a.label = 3;
-                    case 3: return [4 /*yield*/, this.CountPages(notes)];
+                    case 3: return [4 /*yield*/, this.countPages(notes)];
                     case 4:
                         pagesCount = _a.sent();
-                        return [4 /*yield*/, notes.orderBy('id', "DESC")
+                        return [4 /*yield*/, notes.orderBy('id', 'DESC')
                                 .offset(offset)
                                 .limit(this.NotesOnPage)
                                 .getMany()];

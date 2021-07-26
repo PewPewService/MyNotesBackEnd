@@ -58,6 +58,9 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UsersRepository = void 0;
+/* eslint-disable max-len */
+/* eslint-disable new-cap */
+/* eslint-disable require-jsdoc */
 var typeorm_1 = require("typeorm");
 var users_entity_1 = require("../database/entities/users.entity");
 var UsersRepository = /** @class */ (function (_super) {
@@ -75,24 +78,24 @@ var UsersRepository = /** @class */ (function (_super) {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 3, , 4]);
-                        return [4 /*yield*/, this.createQueryBuilder("Users")
+                        return [4 /*yield*/, this.createQueryBuilder('Users')
                                 .select()
-                                .where("Users.email like :email", { email: email })
+                                .where('Users.email like :email', { email: email })
                                 .getCount()];
                     case 1:
                         CheckEmail = _a.sent();
-                        return [4 /*yield*/, this.createQueryBuilder("Users")
+                        return [4 /*yield*/, this.createQueryBuilder('Users')
                                 .select()
-                                .where("Users.username like :username", { username: username })
+                                .where('Users.username like :username', { username: username })
                                 .getCount()];
                     case 2:
                         CheckUsername = _a.sent();
-                        response = "";
+                        response = '';
                         status_1 = 200;
-                        response += CheckEmail ? "email" : "";
-                        response += (CheckEmail + CheckUsername == 2) ? " and " : "";
-                        response += CheckUsername ? "username" : "";
-                        response += (CheckEmail + CheckUsername) ? " is already in use!" : "";
+                        response += CheckEmail ? 'email' : '';
+                        response += (CheckEmail + CheckUsername == 2) ? ' and ' : '';
+                        response += CheckUsername ? 'username' : '';
+                        response += (CheckEmail + CheckUsername) ? ' is already in use!' : '';
                         if (response)
                             status_1 = 250;
                         return [2 /*return*/, { status: status_1, data: response }];
@@ -124,12 +127,12 @@ var UsersRepository = /** @class */ (function (_super) {
                         _a.label = 4;
                     case 4:
                         _a.trys.push([4, 7, , 8]);
-                        return [4 /*yield*/, this.createQueryBuilder("Users")
+                        return [4 /*yield*/, this.createQueryBuilder('Users')
                                 .insert()
                                 .values({
                                 email: user.email,
                                 username: user.username,
-                                password: hasPassword
+                                password: hasPassword,
                             })
                                 .execute()];
                     case 5:
@@ -153,18 +156,20 @@ var UsersRepository = /** @class */ (function (_super) {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 4, , 5]);
-                        return [4 /*yield*/, this.createQueryBuilder("Users")
+                        return [4 /*yield*/, this.createQueryBuilder('Users')
                                 .select()
-                                .where("LOWER(Users.username) like :data or LOWER(Users.email) like :data", { data: data.username.toLowerCase() })
+                                .where('LOWER(Users.username) like :data or LOWER(Users.email) like :data', { data: data.username.toLowerCase() })
                                 .getOne()];
                     case 1:
                         user = _a.sent();
+                        if (!user)
+                            return [2 /*return*/, { status: 240, data: 'This user does not exist!' }];
                         return [4 /*yield*/, this.bcrypt.compare(data.password, user === null || user === void 0 ? void 0 : user.password)];
                     case 2:
                         validPass = _a.sent();
                         if (!validPass)
-                            return [2 /*return*/, { status: 240, data: "invalid pair!" }];
-                        return [4 /*yield*/, this.jwt.sign({ id: user === null || user === void 0 ? void 0 : user.id }, 'secret', { expiresIn: "24h" })];
+                            return [2 /*return*/, { status: 240, data: 'invalid pair!' }];
+                        return [4 /*yield*/, this.jwt.sign({ id: user === null || user === void 0 ? void 0 : user.id }, 'secret', { expiresIn: '24h' })];
                     case 3:
                         token = _a.sent();
                         return [2 /*return*/, { status: 200, data: { jwt: token, user: user === null || user === void 0 ? void 0 : user.username } }];

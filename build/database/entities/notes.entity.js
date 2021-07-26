@@ -10,6 +10,8 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.NotesEntity = void 0;
+/* eslint-disable require-jsdoc */
+/* eslint-disable new-cap */
 var typeorm_1 = require("typeorm");
 var NotesEntity = /** @class */ (function () {
     function NotesEntity() {

@@ -1,45 +1,51 @@
-import { getConnection } from "typeorm";
-import { NotesRepository } from '../repository/notes.repository';
+/* eslint-disable no-invalid-this */
+/* eslint-disable require-jsdoc */
+import {getConnection} from 'typeorm';
+import {NotesRepository} from '../repository/notes.repository';
 
 export class NotesService {
     private NotesRepository : NotesRepository;
 
-    constructor(){
-        this.NotesRepository = getConnection("MyNotes").getCustomRepository(NotesRepository);
+    constructor() {
+      this.NotesRepository =
+        getConnection('MyNotes').getCustomRepository(NotesRepository);
     }
 
-    public AddNote = async (note: object, UserId: number) => {
-        const NewNote = await this.NotesRepository.AddNote(note, UserId);
-        return NewNote;
+    public addNote = async (note: object, userId: number) => {
+      const newNote = await this.NotesRepository.addNote(note, userId);
+      return newNote;
     }
 
-    public EditNote = async (note: object, UserId: number) => {
-        const EditedNote = await this.NotesRepository.EditNote(note, UserId);
-        return EditedNote;
+    public editNote = async (note: object, userId: number) => {
+      const editedNote = await this.NotesRepository.editNote(note, userId);
+      return editedNote;
     }
 
-    public Delete = async (id: number, UserId: number) => {
-        const deleteNote = await this.NotesRepository.DeleteNote(id, UserId);
-        return deleteNote;
+    public delete = async (id: number, userId: number) => {
+      const deleteNote = await this.NotesRepository.deleteNote(id, userId);
+      return deleteNote;
     }
 
-    public Duplicate = async (id: number, UserId: number) => {
-        const duplicateNote = await this.NotesRepository.DuplicateNote(id, UserId);
-        return duplicateNote;
+    public duplicate = async (id: number, userId: number) => {
+      const duplicateNote =
+        await this.NotesRepository.duplicateNote(id, userId);
+      return duplicateNote;
     }
 
-    public GetNote = async (id: number, UserId: number) => {
-        const note = await this.NotesRepository.GetNote(id, UserId);
-        return note;
+    public getNote = async (id: number, userId: number) => {
+      const note = await this.NotesRepository.getNote(id, userId);
+      return note;
     }
 
-    public PinNote = async (id: number, UserId: number) => {
-        const result = await this.NotesRepository.PinNote(id, UserId);
+    public pinNote = async (id: number, userId: number) => {
+      const result = await this.NotesRepository.pinNote(id, userId);
+      return result;
+    }
+
+    public getNotes =
+      async (userId: number, page: number, pinned: boolean, query: any) => {
+        const result =
+          await this.NotesRepository.findNotes(userId, page, pinned, query);
         return result;
-    }
-
-    public GetNotes = async (UserId: number, page: number, pinned: boolean, query: any) => {
-        const result = await this.NotesRepository.FindNotes(UserId, page, pinned, query);
-        return result;
-    }
+      }
 }

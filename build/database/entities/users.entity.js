@@ -10,6 +10,8 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UsersEntity = void 0;
+/* eslint-disable new-cap */
+/* eslint-disable require-jsdoc */
 var typeorm_1 = require("typeorm");
 var UsersEntity = /** @class */ (function () {
     function UsersEntity() {
@@ -31,7 +33,7 @@ var UsersEntity = /** @class */ (function () {
         __metadata("design:type", String)
     ], UsersEntity.prototype, "password", void 0);
     UsersEntity = __decorate([
-        typeorm_1.Entity("Users")
+        typeorm_1.Entity('Users')
     ], UsersEntity);
     return UsersEntity;
 }());

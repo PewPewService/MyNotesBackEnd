@@ -37,89 +37,92 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.NotesService = void 0;
+/* eslint-disable no-invalid-this */
+/* eslint-disable require-jsdoc */
 var typeorm_1 = require("typeorm");
 var notes_repository_1 = require("../repository/notes.repository");
 var NotesService = /** @class */ (function () {
     function NotesService() {
         var _this = this;
-        this.AddNote = function (note, UserId) { return __awaiter(_this, void 0, void 0, function () {
-            var NewNote;
+        this.addNote = function (note, userId) { return __awaiter(_this, void 0, void 0, function () {
+            var newNote;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.NotesRepository.AddNote(note, UserId)];
+                    case 0: return [4 /*yield*/, this.NotesRepository.addNote(note, userId)];
                     case 1:
-                        NewNote = _a.sent();
-                        return [2 /*return*/, NewNote];
+                        newNote = _a.sent();
+                        return [2 /*return*/, newNote];
                 }
             });
         }); };
-        this.EditNote = function (note, UserId) { return __awaiter(_this, void 0, void 0, function () {
-            var EditedNote;
+        this.editNote = function (note, userId) { return __awaiter(_this, void 0, void 0, function () {
+            var editedNote;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.NotesRepository.EditNote(note, UserId)];
+                    case 0: return [4 /*yield*/, this.NotesRepository.editNote(note, userId)];
                     case 1:
-                        EditedNote = _a.sent();
-                        return [2 /*return*/, EditedNote];
+                        editedNote = _a.sent();
+                        return [2 /*return*/, editedNote];
                 }
             });
         }); };
-        this.Delete = function (id, UserId) { return __awaiter(_this, void 0, void 0, function () {
+        this.delete = function (id, userId) { return __awaiter(_this, void 0, void 0, function () {
             var deleteNote;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.NotesRepository.DeleteNote(id, UserId)];
+                    case 0: return [4 /*yield*/, this.NotesRepository.deleteNote(id, userId)];
                     case 1:
                         deleteNote = _a.sent();
                         return [2 /*return*/, deleteNote];
                 }
             });
         }); };
-        this.Duplicate = function (id, UserId) { return __awaiter(_this, void 0, void 0, function () {
+        this.duplicate = function (id, userId) { return __awaiter(_this, void 0, void 0, function () {
             var duplicateNote;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.NotesRepository.DuplicateNote(id, UserId)];
+                    case 0: return [4 /*yield*/, this.NotesRepository.duplicateNote(id, userId)];
                     case 1:
                         duplicateNote = _a.sent();
                         return [2 /*return*/, duplicateNote];
                 }
             });
         }); };
-        this.GetNote = function (id, UserId) { return __awaiter(_this, void 0, void 0, function () {
+        this.getNote = function (id, userId) { return __awaiter(_this, void 0, void 0, function () {
             var note;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.NotesRepository.GetNote(id, UserId)];
+                    case 0: return [4 /*yield*/, this.NotesRepository.getNote(id, userId)];
                     case 1:
                         note = _a.sent();
                         return [2 /*return*/, note];
                 }
             });
         }); };
-        this.PinNote = function (id, UserId) { return __awaiter(_this, void 0, void 0, function () {
+        this.pinNote = function (id, userId) { return __awaiter(_this, void 0, void 0, function () {
             var result;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.NotesRepository.PinNote(id, UserId)];
+                    case 0: return [4 /*yield*/, this.NotesRepository.pinNote(id, userId)];
                     case 1:
                         result = _a.sent();
                         return [2 /*return*/, result];
                 }
             });
         }); };
-        this.GetNotes = function (UserId, page, pinned, query) { return __awaiter(_this, void 0, void 0, function () {
+        this.getNotes = function (userId, page, pinned, query) { return __awaiter(_this, void 0, void 0, function () {
             var result;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.NotesRepository.FindNotes(UserId, page, pinned, query)];
+                    case 0: return [4 /*yield*/, this.NotesRepository.findNotes(userId, page, pinned, query)];
                     case 1:
                         result = _a.sent();
                         return [2 /*return*/, result];
                 }
             });
         }); };
-        this.NotesRepository = typeorm_1.getConnection("MyNotes").getCustomRepository(notes_repository_1.NotesRepository);
+        this.NotesRepository =
+            typeorm_1.getConnection('MyNotes').getCustomRepository(notes_repository_1.NotesRepository);
     }
     return NotesService;
 }());
