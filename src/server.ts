@@ -1,3 +1,4 @@
+/* eslint-disable require-jsdoc */
 import express, {NextFunction, Request, Response} from 'express';
 import {NotesController} from './controllers/notes.controller';
 import {createConnection} from 'typeorm';
@@ -30,17 +31,6 @@ class Server {
     }
 
     public async routes() {
-      // await createConnection({
-      //     type: "postgres",
-      //     host: "localhost",
-      //     port: 5432,
-      //     username: "dbUser",
-      //     password: "0000",
-      //     database: "MyNotes",
-      //     entities: ["build/database/entities/**/*.js"],
-      //     synchronize: true,
-      //     name: "MyNotes"
-      // });
       const ConnType : any = String(process.env.NODE_CONNECTION_TYPE);
       const ConnHost : any = String(process.env.NODE_CONNECTION_HOST);
       const ConnPort : any = Number(process.env.NODE_CONNECTION_PORT);

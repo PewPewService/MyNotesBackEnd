@@ -1,3 +1,4 @@
+/* eslint-disable require-jsdoc */
 import {Router, Response, Request} from 'express';
 import {UsersService} from '../services/users.service';
 
