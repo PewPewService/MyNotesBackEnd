@@ -2,3 +2,4 @@ build/
 node_modules/
 .eslintrc.json
 env_development/
+node_modules

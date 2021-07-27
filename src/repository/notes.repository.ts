@@ -6,7 +6,7 @@ import {NotesEntity} from '../database/entities/notes.entity';
 
 @EntityRepository(NotesEntity)
 export class NotesRepository extends Repository<NotesEntity> {
-    private NotesOnPage: number = 10;
+    private NotesOnPage = 10;
 
     private async countPages(query: any) {
       const count = await query.getCount();
@@ -127,7 +127,7 @@ export class NotesRepository extends Repository<NotesEntity> {
       }
     }
 
-    public async getNotes(UserId: number, page: number, pinned: boolean = false, where : any = {}) {
+    public async getNotes(UserId: number, page: number, pinned = false, where : any = {}) {
       try {
         const offset = page * this.NotesOnPage;
         let notes: any = await this.createQueryBuilder('Notes')

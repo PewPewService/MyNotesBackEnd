@@ -12,12 +12,14 @@ export class UsersService {
     }
 
     public register = async (user: object) => {
-      const result = await this.UsersRepository.register(user);
+      const result = await this.UsersRepository.register(user)
+      
+      ;
       return result;
     }
 
     public login = async (user: object) => {
-      const result = await this.UsersRepository.login(user);
+      const result = await this.UsersRepository.login(user)   ;
       return result;
     }
 
