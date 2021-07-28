@@ -39,10 +39,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+/* eslint-disable require-jsdoc */
 var express_1 = __importDefault(require("express"));
 var notes_controller_1 = require("./controllers/notes.controller");
 var typeorm_1 = require("typeorm");
 var users_controller_1 = require("./controllers/users.controller");
+var dotenv_1 = __importDefault(require("dotenv"));
+console.log('.env.' + process.env.MODE);
+var config = dotenv_1.default.config({ path: '.env.' + process.env.MODE });
 var Server = /** @class */ (function () {
     function Server() {
         this.app = express_1.default();
@@ -59,7 +63,7 @@ var Server = /** @class */ (function () {
             res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
             next();
         });
-        console.log(process.env);
+        // console.log(process.env);
     };
     Server.prototype.routes = function () {
         return __awaiter(this, void 0, void 0, function () {

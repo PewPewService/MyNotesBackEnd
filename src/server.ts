@@ -3,6 +3,11 @@ import express, {NextFunction, Request, Response} from 'express';
 import {NotesController} from './controllers/notes.controller';
 import {createConnection} from 'typeorm';
 import {UsersConrtoller} from './controllers/users.controller';
+import dotenv from 'dotenv'
+
+console.log('.env.' + process.env.MODE);
+
+const config = dotenv.config({ path: '.env.' + process.env.MODE })
 
 class Server {
     private NotesController!: NotesController;
@@ -27,7 +32,7 @@ class Server {
             'Origin, X-Requested-With, Content-Type, Accept');
         next();
       });
-      console.log(process.env);
+      // console.log(process.env);
     }
 
     public async routes() {
