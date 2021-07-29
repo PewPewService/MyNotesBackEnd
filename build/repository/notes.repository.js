@@ -63,12 +63,35 @@ exports.NotesRepository = void 0;
 /* eslint-disable require-jsdoc */
 var typeorm_1 = require("typeorm");
 var notes_entity_1 = require("../database/entities/notes.entity");
+var fs_1 = require("fs");
 var NotesRepository = /** @class */ (function (_super) {
     __extends(NotesRepository, _super);
     function NotesRepository() {
         var _this = _super !== null && _super.apply(this, arguments) || this;
         _this.NotesOnPage = 10;
+        _this.getImages = function (paths) {
+            var base64Images = [];
+            if (!paths)
+                return [];
+            for (var _i = 0, paths_1 = paths; _i < paths_1.length; _i++) {
+                var path = paths_1[_i];
+                var file = fs_1.readFileSync(path, { encoding: 'utf8' });
+                // const image = Buffer.from(file).toString('base64');
+                base64Images.push(file); // image);
+            }
+            return base64Images;
+        };
         return _this;
+        /* private getImages = (paths: Array<string>) => {
+            const base64Images : Array<string> = [];
+            for (let i=0; i<paths.length; i++) {
+              const file = readFileSync(paths[i], {encoding: 'base64'});
+              // const image = Buffer.from(file).toString('base64', 0, 20);
+              base64Images.push(file);// image);
+            }
+            console.log('returned');
+            return base64Images;
+          } */
     }
     NotesRepository.prototype.countPages = function (query) {
         return __awaiter(this, void 0, void 0, function () {
@@ -88,31 +111,37 @@ var NotesRepository = /** @class */ (function (_super) {
     };
     NotesRepository.prototype.getNote = function (id, UserId) {
         return __awaiter(this, void 0, void 0, function () {
-            var note, err_1;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
+            var note, _a, err_1;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
                     case 0:
-                        _a.trys.push([0, 2, , 3]);
+                        _b.trys.push([0, 5, , 6]);
                         return [4 /*yield*/, this.createQueryBuilder('Notes')
                                 .select()
                                 .where('id = :id and Notes.userId = :userId', { id: id, userId: UserId })
                                 .getOne()];
                     case 1:
-                        note = _a.sent();
-                        if (!note)
-                            return [2 /*return*/, { status: 400, data: 'Note wasn\'t found' }];
-                        return [2 /*return*/, { status: 200, data: note }];
+                        note = _b.sent();
+                        if (!!note) return [3 /*break*/, 2];
+                        return [2 /*return*/, { status: 400, data: 'Note wasn\'t found' }];
                     case 2:
-                        err_1 = _a.sent();
+                        _a = note;
+                        return [4 /*yield*/, this.getImages(note.images)];
+                    case 3:
+                        _a.images = _b.sent();
+                        return [2 /*return*/, { status: 200, data: note }];
+                    case 4: return [3 /*break*/, 6];
+                    case 5:
+                        err_1 = _b.sent();
                         return [2 /*return*/, { status: 500, data: err_1 }];
-                    case 3: return [2 /*return*/];
+                    case 6: return [2 /*return*/];
                 }
             });
         });
     };
     NotesRepository.prototype.duplicateNote = function (id, UserId) {
         return __awaiter(this, void 0, void 0, function () {
-            var note;
+            var note, duplicate;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, this.getNote(id, UserId)];
@@ -124,8 +153,8 @@ var NotesRepository = /** @class */ (function (_super) {
                                 .values(note.data)
                                 .execute()];
                     case 2:
-                        _a.sent();
-                        return [2 /*return*/, { status: 200, data: 'The note has been successfully copied!' }];
+                        duplicate = _a.sent();
+                        return [2 /*return*/, { status: 200, data: duplicate.identifiers[0].id }];
                     case 3: return [2 /*return*/, note];
                 }
             });
@@ -213,7 +242,7 @@ var NotesRepository = /** @class */ (function (_super) {
     };
     NotesRepository.prototype.addNote = function (note, UserId) {
         return __awaiter(this, void 0, void 0, function () {
-            var err_4;
+            var newNote, err_4;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -223,15 +252,14 @@ var NotesRepository = /** @class */ (function (_super) {
                                 .values({
                                 name: note.name,
                                 text: note.text,
-                                images: note.images,
                                 tags: note.tags,
                                 userId: UserId,
                                 pinned: false,
                             })
                                 .execute()];
                     case 1:
-                        _a.sent();
-                        return [2 /*return*/, { status: 200, data: 'The Note was successfully added!' }];
+                        newNote = _a.sent();
+                        return [2 /*return*/, { status: 200, data: /* 'The Note was successfully added!' */ newNote }];
                     case 2:
                         err_4 = _a.sent();
                         return [2 /*return*/, { status: 500, data: err_4 }];
@@ -273,7 +301,7 @@ var NotesRepository = /** @class */ (function (_super) {
         if (pinned === void 0) { pinned = false; }
         if (where === void 0) { where = {}; }
         return __awaiter(this, void 0, void 0, function () {
-            var offset, notes, pagesCount, err_6;
+            var offset, notes, pagesCount, _i, notes_1, note, err_6;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -298,11 +326,38 @@ var NotesRepository = /** @class */ (function (_super) {
                                 .getMany()];
                     case 5:
                         notes = _a.sent();
+                        for (_i = 0, notes_1 = notes; _i < notes_1.length; _i++) {
+                            note = notes_1[_i];
+                            note.images = this.getImages(note.images);
+                        }
                         return [2 /*return*/, { status: 200, data: [notes, pagesCount] }];
                     case 6:
                         err_6 = _a.sent();
                         return [2 /*return*/, { status: 500, data: err_6 }];
                     case 7: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    NotesRepository.prototype.saveImagePaths = function (paths, userId, noteId) {
+        return __awaiter(this, void 0, void 0, function () {
+            var note, err_7;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        return [4 /*yield*/, this.createQueryBuilder('Notes')
+                                .update()
+                                .set({ images: paths })
+                                .where('id = :id and userId = :userId', { id: noteId, userId: userId })
+                                .execute()];
+                    case 1:
+                        note = _a.sent();
+                        return [2 /*return*/, { status: 200, data: note }];
+                    case 2:
+                        err_7 = _a.sent();
+                        return [2 /*return*/, { status: 500, data: err_7 }];
+                    case 3: return [2 /*return*/];
                 }
             });
         });

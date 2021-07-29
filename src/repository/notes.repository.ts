@@ -3,6 +3,7 @@
 /* eslint-disable require-jsdoc */
 import {EntityRepository, Repository} from 'typeorm';
 import {NotesEntity} from '../database/entities/notes.entity';
+import {readFileSync} from 'fs';
 
 @EntityRepository(NotesEntity)
 export class NotesRepository extends Repository<NotesEntity> {
@@ -23,7 +24,10 @@ export class NotesRepository extends Repository<NotesEntity> {
                 {id: id, userId: UserId})
             .getOne();
         if (!note) return {status: 400, data: 'Note wasn\'t found'};
-        return {status: 200, data: note};
+        else {
+          note.images = await this.getImages(note.images);
+          return {status: 200, data: note};
+        }
       } catch (err) {
         return {status: 500, data: err};
       }
@@ -32,11 +36,11 @@ export class NotesRepository extends Repository<NotesEntity> {
     public async duplicateNote(id: number, UserId: number) {
       const note = await this.getNote(id, UserId);
       if (note.status==200) {
-        await this.createQueryBuilder('Notes')
+        const duplicate = await this.createQueryBuilder('Notes')
             .insert()
             .values(note.data)
             .execute();
-        return {status: 200, data: 'The note has been successfully copied!'};
+        return {status: 200, data: duplicate.identifiers[0].id};
       } else return note;
     }
 
@@ -91,18 +95,17 @@ export class NotesRepository extends Repository<NotesEntity> {
 
     public async addNote(note: any, UserId: number) {
       try {
-        await this.createQueryBuilder('Notes')
+        const newNote = await this.createQueryBuilder('Notes')
             .insert()
             .values({
               name: note.name,
               text: note.text,
-              images: note.images,
               tags: note.tags,
               userId: UserId,
               pinned: false,
             })
             .execute();
-        return {status: 200, data: 'The Note was successfully added!'};
+        return {status: 200, data: /* 'The Note was successfully added!' */newNote};
       } catch (err) {
         return {status: 500, data: err};
       }
@@ -139,9 +142,47 @@ export class NotesRepository extends Repository<NotesEntity> {
             .offset(offset)
             .limit(this.NotesOnPage)
             .getMany();
+        for (const note of notes) {
+          note.images = this.getImages(note.images);
+        }
         return {status: 200, data: [notes, pagesCount]};
       } catch (err) {
         return {status: 500, data: err};
       }
     }
+
+    public async saveImagePaths(paths: Array<string>, userId: number, noteId: number) {
+      try {
+        const note = await this.createQueryBuilder('Notes')
+            .update()
+            .set({images: paths})
+            .where('id = :id and userId = :userId', {id: noteId, userId: userId})
+            .execute();
+        return {status: 200, data: note};
+      } catch (err) {
+        return {status: 500, data: err};
+      }
+    }
+
+    private getImages = (paths: Array<string>) => {
+      const base64Images : Array<string> = [];
+      if (!paths) return [];
+      for (const path of paths) {
+        const file = readFileSync(path, {encoding: 'utf8'});
+        // const image = Buffer.from(file).toString('base64');
+        base64Images.push(file);// image);
+      }
+      return base64Images;
+    }
+
+  /* private getImages = (paths: Array<string>) => {
+      const base64Images : Array<string> = [];
+      for (let i=0; i<paths.length; i++) {
+        const file = readFileSync(paths[i], {encoding: 'base64'});
+        // const image = Buffer.from(file).toString('base64', 0, 20);
+        base64Images.push(file);// image);
+      }
+      console.log('returned');
+      return base64Images;
+    } */
 }

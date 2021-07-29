@@ -40,24 +40,26 @@ exports.NotesController = void 0;
 /* eslint-disable no-invalid-this */
 /* eslint-disable require-jsdoc */
 /* eslint-disable new-cap */
+/* "dev": "node -r dotenv/config ./build/server.js
+dotenv_config_path=env_development/.env.development", */
 var express_1 = require("express");
 var notes_service_1 = require("../services/notes.service");
 var users_service_1 = require("../services/users.service");
+var files_controller_1 = require("./files.controller");
 var NotesController = /** @class */ (function () {
     function NotesController() {
         var _this = this;
-        this.base64img = require('node-base64-img');
         this.userControl = function (req, res, func) { return __awaiter(_this, void 0, void 0, function () {
-            var jwt, UserId;
+            var jwt, userId;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         jwt = req.body.jwt;
                         return [4 /*yield*/, this.usersService.auth(jwt)];
                     case 1:
-                        UserId = _a.sent();
-                        if (UserId.status == 200) {
-                            func(req, res, Number(UserId.data));
+                        userId = _a.sent();
+                        if (userId.status == 200) {
+                            func(req, res, Number(userId.data));
                         }
                         else {
                             res.status(400).send('Invalid token! Please, re-login.').json;
@@ -67,28 +69,68 @@ var NotesController = /** @class */ (function () {
                 }
             });
         }); };
-        this.CreateNote = function (req, res, UserId) { return __awaiter(_this, void 0, void 0, function () {
-            var note, NewNote;
+        /* private decodeBase64Image(dataString: string) {
+          const matches = dataString.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/);
+          const response: any = {};
+          if (matches && matches.length > 2) {
+            const dataType = matches[1].match(/image\/([A-Za-z]+)/);
+            if (dataType && dataType.length>1) {
+              response.dataType = dataType[1];
+              response.file = Buffer.from(matches[2], 'base64');
+            }
+          }
+          return response;
+        } */
+        // private decodeBase64Image(dataString: string) {
+        //   return Buffer.from(dataString, 'base64');
+        // }
+        this.saveImagePaths = function (paths, userId, noteId, res) { return __awaiter(_this, void 0, void 0, function () {
+            var response;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0:
-                        note = req.body.note;
-                        return [4 /*yield*/, this.notesService.addNote(note, UserId)];
+                    case 0: return [4 /*yield*/, this.notesService.saveImagePaths(paths, userId, noteId)];
                     case 1:
-                        NewNote = _a.sent();
-                        res.status(NewNote.status).send(NewNote.data).json;
+                        response = _a.sent();
+                        res.status(response.status).send(response.data).json;
                         res.end();
                         return [2 /*return*/];
                 }
             });
         }); };
-        this.GetNote = function (req, res, UserId) { return __awaiter(_this, void 0, void 0, function () {
+        this.createNote = function (req, res, userId) { return __awaiter(_this, void 0, void 0, function () {
+            var note, NewNote, noteId, filePaths;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        note = req.body.note;
+                        return [4 /*yield*/, this.notesService.addNote(note, userId)];
+                    case 1:
+                        NewNote = _a.sent();
+                        if (!(NewNote.status == 200 && note.images.length > 0)) return [3 /*break*/, 4];
+                        noteId = NewNote.data.identifiers[0].id;
+                        filePaths = this.filesController.saveImages(note.images, userId, noteId);
+                        console.log(filePaths);
+                        if (!(filePaths.status == 200)) return [3 /*break*/, 3];
+                        return [4 /*yield*/, this.saveImagePaths(filePaths.data, userId, noteId, res)];
+                    case 2:
+                        _a.sent();
+                        _a.label = 3;
+                    case 3: return [3 /*break*/, 5];
+                    case 4:
+                        res.status(NewNote.status).send(NewNote.data).json;
+                        res.end();
+                        _a.label = 5;
+                    case 5: return [2 /*return*/];
+                }
+            });
+        }); };
+        this.getNote = function (req, res, userId) { return __awaiter(_this, void 0, void 0, function () {
             var id, note;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         id = req.params.id;
-                        return [4 /*yield*/, this.notesService.getNote(Number(id), UserId)];
+                        return [4 /*yield*/, this.notesService.getNote(Number(id), userId)];
                     case 1:
                         note = _a.sent();
                         res.status(note.status).send(note.data).json;
@@ -97,13 +139,17 @@ var NotesController = /** @class */ (function () {
                 }
             });
         }); };
-        this.EditNote = function (req, res, UserId) { return __awaiter(_this, void 0, void 0, function () {
-            var NoteData, EditedNote;
+        this.editNote = function (req, res, userId) { return __awaiter(_this, void 0, void 0, function () {
+            var NoteData, filePaths, EditedNote;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         NoteData = req.body.note;
-                        return [4 /*yield*/, this.notesService.editNote(NoteData, UserId)];
+                        this.filesController.deleteFolder(Number(NoteData.id), userId);
+                        filePaths = this.filesController.saveImages(NoteData.images, userId, NoteData.id);
+                        if (filePaths.status == 200)
+                            NoteData.images = filePaths.data;
+                        return [4 /*yield*/, this.notesService.editNote(NoteData, userId)];
                     case 1:
                         EditedNote = _a.sent();
                         res.status(EditedNote.status).send(EditedNote.data).json;
@@ -112,28 +158,56 @@ var NotesController = /** @class */ (function () {
                 }
             });
         }); };
-        this.DuplicateNote = function (req, res, UserId) { return __awaiter(_this, void 0, void 0, function () {
-            var id, duplicate;
+        this.duplicateNote = function (req, res, userId) { return __awaiter(_this, void 0, void 0, function () {
+            var id, duplicate, filePaths;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        id = req.params.id;
-                        return [4 /*yield*/, this.notesService.duplicate(Number(id), UserId)];
+                        id = Number(req.params.id);
+                        return [4 /*yield*/, this.notesService.duplicate(id, userId)];
                     case 1:
                         duplicate = _a.sent();
-                        res.status(duplicate.status).send(duplicate.data).json;
+                        if (duplicate.status == 200) {
+                            filePaths = this.filesController.duplicateFolder(id, duplicate.data, userId);
+                            if (filePaths.status == 200) {
+                                this.saveImagePaths(filePaths.data, userId, duplicate.data, res);
+                            }
+                            else {
+                                res.status(filePaths.status).send(filePaths.data).json;
+                            }
+                        }
+                        else {
+                            res.status(duplicate.status).send(duplicate.data).json;
+                            res.end();
+                        }
+                        return [2 /*return*/];
+                }
+            });
+        }); };
+        this.deleteNote = function (req, res, userId) { return __awaiter(_this, void 0, void 0, function () {
+            var id, result;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        id = Number(req.params.id);
+                        return [4 /*yield*/, this.notesService.delete(id, userId)];
+                    case 1:
+                        result = _a.sent();
+                        if (result.status == 200)
+                            this.filesController.deleteFolder(id, userId);
+                        res.status(result.status).send(result.data).json;
                         res.end();
                         return [2 /*return*/];
                 }
             });
         }); };
-        this.DeleteNote = function (req, res, UserId) { return __awaiter(_this, void 0, void 0, function () {
+        this.pinNote = function (req, res, userId) { return __awaiter(_this, void 0, void 0, function () {
             var id, result;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         id = req.params.id;
-                        return [4 /*yield*/, this.notesService.delete(Number(id), UserId)];
+                        return [4 /*yield*/, this.notesService.pinNote(Number(id), userId)];
                     case 1:
                         result = _a.sent();
                         res.status(result.status).send(result.data).json;
@@ -142,22 +216,7 @@ var NotesController = /** @class */ (function () {
                 }
             });
         }); };
-        this.PinNote = function (req, res, UserId) { return __awaiter(_this, void 0, void 0, function () {
-            var id, result;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        id = req.params.id;
-                        return [4 /*yield*/, this.notesService.pinNote(Number(id), UserId)];
-                    case 1:
-                        result = _a.sent();
-                        res.status(result.status).send(result.data).json;
-                        res.end();
-                        return [2 /*return*/];
-                }
-            });
-        }); };
-        this.GetNotes = function (req, res, UserId) { return __awaiter(_this, void 0, void 0, function () {
+        this.getNotes = function (req, res, userId) { return __awaiter(_this, void 0, void 0, function () {
             var page, pinned, query, result;
             return __generator(this, function (_a) {
                 switch (_a.label) {
@@ -165,7 +224,7 @@ var NotesController = /** @class */ (function () {
                         page = req.body.page;
                         pinned = req.body.pinned;
                         query = req.body.queryString;
-                        return [4 /*yield*/, this.notesService.getNotes(UserId, Number(page), pinned, query)];
+                        return [4 /*yield*/, this.notesService.getNotes(userId, Number(page), pinned, query)];
                     case 1:
                         result = _a.sent();
                         res.status(result.status).send(result.data).json;
@@ -176,31 +235,32 @@ var NotesController = /** @class */ (function () {
         }); };
         this.notesService = new notes_service_1.NotesService();
         this.usersService = new users_service_1.UsersService();
+        this.filesController = new files_controller_1.FilesController();
         this.router = express_1.Router();
         this.routes();
     }
     NotesController.prototype.routes = function () {
         var _this = this;
         this.router.post('/getNotes', function (req, res) {
-            _this.userControl(req, res, _this.GetNotes);
+            _this.userControl(req, res, _this.getNotes);
         });
         this.router.post('/getNote/:id', function (req, res) {
-            _this.userControl(req, res, _this.GetNote);
+            _this.userControl(req, res, _this.getNote);
         });
         this.router.post('/createNote', function (req, res) {
-            _this.userControl(req, res, _this.CreateNote);
+            _this.userControl(req, res, _this.createNote);
         });
         this.router.post('/editNote', function (req, res) {
-            _this.userControl(req, res, _this.EditNote);
+            _this.userControl(req, res, _this.editNote);
         });
         this.router.post('/duplicateNote/:id', function (req, res) {
-            _this.userControl(req, res, _this.DuplicateNote);
+            _this.userControl(req, res, _this.duplicateNote);
         });
         this.router.post('/deleteNote/:id', function (req, res) {
-            _this.userControl(req, res, _this.DeleteNote);
+            _this.userControl(req, res, _this.deleteNote);
         });
         this.router.post('/pinNote/:id', function (req, res) {
-            _this.userControl(req, res, _this.PinNote);
+            _this.userControl(req, res, _this.pinNote);
         });
     };
     return NotesController;

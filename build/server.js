@@ -39,6 +39,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+/* eslint-disable no-invalid-this */
+/* eslint-disable require-jsdoc */
 var express_1 = __importDefault(require("express"));
 var notes_controller_1 = require("./controllers/notes.controller");
 var typeorm_1 = require("typeorm");
@@ -53,13 +55,14 @@ var Server = /** @class */ (function () {
     Server.prototype.configuration = function () {
         this.app.set('port', process.env.PORT || 3000);
         // this.app.use(express.json());
-        this.app.use(this.bodyParser.json({ limit: '50mb', extended: true }));
+        this.app.use(this.bodyParser.json({ limit: '100mb', extended: true }));
+        this.app.use(express_1.default.static(__dirname + '/images'));
+        this.app.use('/images', express_1.default.static('images'));
         this.app.use(function (req, res, next) {
             res.header('Access-Control-Allow-Origin', '*');
             res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
             next();
         });
-        console.log(process.env);
     };
     Server.prototype.routes = function () {
         return __awaiter(this, void 0, void 0, function () {

@@ -1,3 +1,4 @@
+/* eslint-disable no-invalid-this */
 /* eslint-disable require-jsdoc */
 import express, {NextFunction, Request, Response} from 'express';
 import {NotesController} from './controllers/notes.controller';
@@ -20,14 +21,15 @@ class Server {
     public configuration() {
       this.app.set('port', process.env.PORT || 3000);
       // this.app.use(express.json());
-      this.app.use(this.bodyParser.json({limit: '50mb', extended: true}));
+      this.app.use(this.bodyParser.json({limit: '100mb', extended: true}));
+      this.app.use(express.static(__dirname+'/images'));
+      this.app.use('/images', express.static('images'));
       this.app.use(function(req: Request, res: Response, next: NextFunction) {
         res.header('Access-Control-Allow-Origin', '*');
         res.header('Access-Control-Allow-Headers',
             'Origin, X-Requested-With, Content-Type, Accept');
         next();
       });
-      console.log(process.env);
     }
 
     public async routes() {

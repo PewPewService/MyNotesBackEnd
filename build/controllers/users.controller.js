@@ -37,6 +37,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UsersConrtoller = void 0;
+/* eslint-disable require-jsdoc */
 var express_1 = require("express");
 var users_service_1 = require("../services/users.service");
 var UsersConrtoller = /** @class */ (function () {

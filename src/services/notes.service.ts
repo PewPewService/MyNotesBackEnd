@@ -16,6 +16,13 @@ export class NotesService {
       return newNote;
     }
 
+    public saveImagePaths =
+    async (paths: Array<string>, userId: number, noteId: number) => {
+      const response =
+        await this.NotesRepository.saveImagePaths(paths, userId, noteId);
+      return response;
+    }
+
     public editNote = async (note: object, userId: number) => {
       const editedNote = await this.NotesRepository.editNote(note, userId);
       return editedNote;
