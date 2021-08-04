@@ -37,8 +37,6 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.NotesService = void 0;
-/* eslint-disable no-invalid-this */
-/* eslint-disable require-jsdoc */
 var typeorm_1 = require("typeorm");
 var notes_repository_1 = require("../repository/notes.repository");
 var NotesService = /** @class */ (function () {

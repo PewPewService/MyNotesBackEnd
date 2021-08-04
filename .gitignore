@@ -1,5 +1,6 @@
 build/
 node_modules/
+.env.development
 .eslintrc.json
-env_development/
 node_modules
+images/
