@@ -58,9 +58,6 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UsersRepository = void 0;
-/* eslint-disable max-len */
-/* eslint-disable new-cap */
-/* eslint-disable require-jsdoc */
 var typeorm_1 = require("typeorm");
 var users_entity_1 = require("../database/entities/users.entity");
 var UsersRepository = /** @class */ (function (_super) {
@@ -140,7 +137,7 @@ var UsersRepository = /** @class */ (function (_super) {
                         return [4 /*yield*/, this.login(user)];
                     case 6:
                         LoggedUser = _a.sent();
-                        return [2 /*return*/, { status: 200, data: LoggedUser }];
+                        return [2 /*return*/, LoggedUser];
                     case 7:
                         err_2 = _a.sent();
                         return [2 /*return*/, { status: 250, data: err_2 }];
@@ -190,8 +187,9 @@ var UsersRepository = /** @class */ (function (_super) {
                             if (!err) {
                                 return { status: 200, data: decoded.id };
                             }
-                            else
+                            else {
                                 return { status: 250, data: err };
+                            }
                         })];
                     case 1:
                         result = _a.sent();

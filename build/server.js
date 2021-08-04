@@ -39,12 +39,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-/* eslint-disable no-invalid-this */
-/* eslint-disable require-jsdoc */
 var express_1 = __importDefault(require("express"));
 var notes_controller_1 = require("./controllers/notes.controller");
 var typeorm_1 = require("typeorm");
 var users_controller_1 = require("./controllers/users.controller");
+var dotenv_1 = __importDefault(require("dotenv"));
+console.log('.env.' + process.env.MODE);
+dotenv_1.default.config({ path: '.env.' + process.env.MODE });
 var Server = /** @class */ (function () {
     function Server() {
         this.app = express_1.default();
@@ -63,6 +64,22 @@ var Server = /** @class */ (function () {
             res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
             next();
         });
+    };
+    Server.prototype.uploadFiles = function (req, res) {
+        try {
+            console.log(req.body);
+            var imagesPaths = [];
+            for (var _i = 0, _a = req.files; _i < _a.length; _i++) {
+                var image = _a[_i];
+                imagesPaths.push(image.path);
+            }
+            res.status(200).send(imagesPaths).json;
+            res.end();
+        }
+        catch (err) {
+            res.status(500).send(err);
+            res.end();
+        }
     };
     Server.prototype.routes = function () {
         return __awaiter(this, void 0, void 0, function () {
