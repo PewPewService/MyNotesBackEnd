@@ -37,8 +37,6 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.NotesService = void 0;
-/* eslint-disable no-invalid-this */
-/* eslint-disable require-jsdoc */
 var typeorm_1 = require("typeorm");
 var notes_repository_1 = require("../repository/notes.repository");
 var NotesService = /** @class */ (function () {
@@ -52,17 +50,6 @@ var NotesService = /** @class */ (function () {
                     case 1:
                         newNote = _a.sent();
                         return [2 /*return*/, newNote];
-                }
-            });
-        }); };
-        this.saveImagePaths = function (paths, userId, noteId) { return __awaiter(_this, void 0, void 0, function () {
-            var response;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.NotesRepository.saveImagePaths(paths, userId, noteId)];
-                    case 1:
-                        response = _a.sent();
-                        return [2 /*return*/, response];
                 }
             });
         }); };

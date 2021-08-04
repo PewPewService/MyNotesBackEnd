@@ -5,22 +5,26 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "tsc": "tsc ",
-    "dev": "node -r dotenv/config ./build/server.js dotenv_config_path=env_development/.env.development",
-    "prod": "node -r dotenv/config ./build/server.js",
-    "eslint": "eslint"
+    "eslint": "eslint",
+    "prettier": "prettier",
+    "dev": "cross-env MODE=development concurrently \"tsc -w\" \"nodemon build/server.js\"",
+    "prod": "cross-env MODE=production node -r dotenv/config ./build/server.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "axios": "^0.21.1",
     "base64-img": "^1.0.4",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
+    "cross-env": "^7.0.3",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
     "multer": "^1.4.2",
     "node-base64-img": "^1.0.1",
     "pg": "^8.6.0",
+    "prettier": "^2.3.2",
     "typeorm": "^0.2.34"
   },
   "devDependencies": {

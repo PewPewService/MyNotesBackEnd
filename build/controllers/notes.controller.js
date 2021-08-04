@@ -35,20 +35,27 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.NotesController = void 0;
-/* eslint-disable no-invalid-this */
-/* eslint-disable require-jsdoc */
-/* eslint-disable new-cap */
-/* "dev": "node -r dotenv/config ./build/server.js
-dotenv_config_path=env_development/.env.development", */
 var express_1 = require("express");
 var notes_service_1 = require("../services/notes.service");
 var users_service_1 = require("../services/users.service");
 var files_controller_1 = require("./files.controller");
+var path_1 = __importDefault(require("path"));
 var NotesController = /** @class */ (function () {
     function NotesController() {
         var _this = this;
+        this.multer = require('multer');
+        this.storage = this.multer.diskStorage({
+            destination: 'images/',
+            filename: function (req, file, cb) {
+                cb(null, Date.now() + path_1.default.extname(file.originalname));
+            },
+        });
+        this.upload = this.multer({ storage: this.storage });
         this.userControl = function (req, res, func) { return __awaiter(_this, void 0, void 0, function () {
             var jwt, userId;
             return __generator(this, function (_a) {
@@ -69,58 +76,21 @@ var NotesController = /** @class */ (function () {
                 }
             });
         }); };
-        /* private decodeBase64Image(dataString: string) {
-          const matches = dataString.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/);
-          const response: any = {};
-          if (matches && matches.length > 2) {
-            const dataType = matches[1].match(/image\/([A-Za-z]+)/);
-            if (dataType && dataType.length>1) {
-              response.dataType = dataType[1];
-              response.file = Buffer.from(matches[2], 'base64');
-            }
-          }
-          return response;
-        } */
-        // private decodeBase64Image(dataString: string) {
-        //   return Buffer.from(dataString, 'base64');
-        // }
-        this.saveImagePaths = function (paths, userId, noteId, res) { return __awaiter(_this, void 0, void 0, function () {
-            var response;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.notesService.saveImagePaths(paths, userId, noteId)];
-                    case 1:
-                        response = _a.sent();
-                        res.status(response.status).send(response.data).json;
-                        res.end();
-                        return [2 /*return*/];
-                }
-            });
-        }); };
         this.createNote = function (req, res, userId) { return __awaiter(_this, void 0, void 0, function () {
-            var note, NewNote, noteId, filePaths;
+            var note, images, NewNote;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        note = req.body.note;
+                        note = req.body;
+                        images = this.filesController.getImagePaths(req.files);
+                        note.images = images;
+                        note.tags = note.tags ? note.tags.split(',') : [];
                         return [4 /*yield*/, this.notesService.addNote(note, userId)];
                     case 1:
                         NewNote = _a.sent();
-                        if (!(NewNote.status == 200 && note.images.length > 0)) return [3 /*break*/, 4];
-                        noteId = NewNote.data.identifiers[0].id;
-                        filePaths = this.filesController.saveImages(note.images, userId, noteId);
-                        console.log(filePaths);
-                        if (!(filePaths.status == 200)) return [3 /*break*/, 3];
-                        return [4 /*yield*/, this.saveImagePaths(filePaths.data, userId, noteId, res)];
-                    case 2:
-                        _a.sent();
-                        _a.label = 3;
-                    case 3: return [3 /*break*/, 5];
-                    case 4:
                         res.status(NewNote.status).send(NewNote.data).json;
                         res.end();
-                        _a.label = 5;
-                    case 5: return [2 /*return*/];
+                        return [2 /*return*/];
                 }
             });
         }); };
@@ -140,15 +110,21 @@ var NotesController = /** @class */ (function () {
             });
         }); };
         this.editNote = function (req, res, userId) { return __awaiter(_this, void 0, void 0, function () {
-            var NoteData, filePaths, EditedNote;
+            var NoteData, EditedNote;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        NoteData = req.body.note;
-                        this.filesController.deleteFolder(Number(NoteData.id), userId);
-                        filePaths = this.filesController.saveImages(NoteData.images, userId, NoteData.id);
-                        if (filePaths.status == 200)
-                            NoteData.images = filePaths.data;
+                        NoteData = req.body;
+                        NoteData.leftImages = NoteData.leftImages ?
+                            NoteData.leftImages.split(',') : [];
+                        NoteData.deletedImages = NoteData.deletedImages ?
+                            NoteData.deletedImages.split(',') : [];
+                        if (NoteData.deletedImages.length > 0) {
+                            this.filesController.deleteImages(NoteData.deletedImages);
+                        }
+                        NoteData.images = this.filesController.getImagePaths(req.files);
+                        NoteData.images = NoteData.leftImages.concat(NoteData.images);
+                        NoteData.tags = NoteData.tags ? NoteData.tags.split(',') : [];
                         return [4 /*yield*/, this.notesService.editNote(NoteData, userId)];
                     case 1:
                         EditedNote = _a.sent();
@@ -159,7 +135,7 @@ var NotesController = /** @class */ (function () {
             });
         }); };
         this.duplicateNote = function (req, res, userId) { return __awaiter(_this, void 0, void 0, function () {
-            var id, duplicate, filePaths;
+            var id, duplicate;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -167,19 +143,8 @@ var NotesController = /** @class */ (function () {
                         return [4 /*yield*/, this.notesService.duplicate(id, userId)];
                     case 1:
                         duplicate = _a.sent();
-                        if (duplicate.status == 200) {
-                            filePaths = this.filesController.duplicateFolder(id, duplicate.data, userId);
-                            if (filePaths.status == 200) {
-                                this.saveImagePaths(filePaths.data, userId, duplicate.data, res);
-                            }
-                            else {
-                                res.status(filePaths.status).send(filePaths.data).json;
-                            }
-                        }
-                        else {
-                            res.status(duplicate.status).send(duplicate.data).json;
-                            res.end();
-                        }
+                        res.status(duplicate.status).send(duplicate.data).json;
+                        res.end();
                         return [2 /*return*/];
                 }
             });
@@ -193,8 +158,6 @@ var NotesController = /** @class */ (function () {
                         return [4 /*yield*/, this.notesService.delete(id, userId)];
                     case 1:
                         result = _a.sent();
-                        if (result.status == 200)
-                            this.filesController.deleteFolder(id, userId);
                         res.status(result.status).send(result.data).json;
                         res.end();
                         return [2 /*return*/];
@@ -247,10 +210,10 @@ var NotesController = /** @class */ (function () {
         this.router.post('/getNote/:id', function (req, res) {
             _this.userControl(req, res, _this.getNote);
         });
-        this.router.post('/createNote', function (req, res) {
+        this.router.post('/createNote', this.upload.array('images'), function (req, res) {
             _this.userControl(req, res, _this.createNote);
         });
-        this.router.post('/editNote', function (req, res) {
+        this.router.post('/editNote', this.upload.array('images'), function (req, res) {
             _this.userControl(req, res, _this.editNote);
         });
         this.router.post('/duplicateNote/:id', function (req, res) {

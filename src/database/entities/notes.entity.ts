@@ -1,5 +1,3 @@
-/* eslint-disable require-jsdoc */
-/* eslint-disable new-cap */
 import {Column, Entity, PrimaryGeneratedColumn} from 'typeorm';
 
 @Entity('Notes')
@@ -17,14 +15,11 @@ export class NotesEntity {
     images!: string[];
 
     @Column('text', {array: true, nullable: true})
-    tags!: string
+    tags!: string;
 
     @Column()
     userId!: number;
 
     @Column()
     pinned!: boolean;
-
-  // @Column('timestamp', {nullable: true})
-  // timestamp!: Date
 }
