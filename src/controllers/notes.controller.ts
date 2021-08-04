@@ -12,7 +12,7 @@ export class NotesController {
 
     private multer = require('multer');
     private storage = this.multer.diskStorage({
-        destination: path.resolve(__dirname, 'images'),
+        destination: path.resolve(__dirname, 'images'), 
         filename: function(req: Request, file: Record<string, any>, cb: Function) {
             cb(null, Date.now() + path.extname(file.originalname));
         },
@@ -43,7 +43,6 @@ export class NotesController {
         const note = req.body;
         const images = this.filesController.getImagePaths(req.files);
         note.images = images;
-        note.tags = note.tags ? note.tags.split(',') : [];
         const NewNote = await this.notesService.addNote(note, userId);
         res.status(NewNote.status).send(NewNote.data).json;
         res.end();
@@ -67,7 +66,6 @@ export class NotesController {
         }
         NoteData.images = this.filesController.getImagePaths(req.files);
         NoteData.images = NoteData.leftImages.concat(NoteData.images);
-        NoteData.tags = NoteData.tags ? NoteData.tags.split(',') : [];
         const EditedNote = await this.notesService.editNote(NoteData, userId);
         res.status(EditedNote.status).send(EditedNote.data).json;
         res.end();

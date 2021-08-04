@@ -50,7 +50,7 @@ var NotesController = /** @class */ (function () {
         var _this = this;
         this.multer = require('multer');
         this.storage = this.multer.diskStorage({
-            destination: 'images/',
+            destination: path_1.default.resolve(__dirname, 'images'),
             filename: function (req, file, cb) {
                 cb(null, Date.now() + path_1.default.extname(file.originalname));
             },
@@ -84,7 +84,6 @@ var NotesController = /** @class */ (function () {
                         note = req.body;
                         images = this.filesController.getImagePaths(req.files);
                         note.images = images;
-                        note.tags = note.tags ? note.tags.split(',') : [];
                         return [4 /*yield*/, this.notesService.addNote(note, userId)];
                     case 1:
                         NewNote = _a.sent();
@@ -124,7 +123,6 @@ var NotesController = /** @class */ (function () {
                         }
                         NoteData.images = this.filesController.getImagePaths(req.files);
                         NoteData.images = NoteData.leftImages.concat(NoteData.images);
-                        NoteData.tags = NoteData.tags ? NoteData.tags.split(',') : [];
                         return [4 /*yield*/, this.notesService.editNote(NoteData, userId)];
                     case 1:
                         EditedNote = _a.sent();
