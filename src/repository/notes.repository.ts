@@ -139,7 +139,7 @@ export class NotesRepository extends Repository<NotesEntity> {
             return {status: 500, data: err};
         }
     }
-
+  
     public async getNotes(UserId: number,
         page: number, pinned = false, where : any = {}): Promise<any> {
         try {
@@ -159,6 +159,6 @@ export class NotesRepository extends Repository<NotesEntity> {
             return {status: 200, data: [notes, pagesCount]};
         } catch (err) {
             return {status: 500, data: err};
-        }
+        }=
     }
 }

@@ -5,8 +5,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "tsc": "tsc ",
-    "eslint": "eslint",
-    "prettier": "prettier",
+    "lint": "eslint 'src/**/*.{js,ts,tsx}' --quiet --fix"
     "dev": "cross-env MODE=development concurrently \"tsc -w\" \"nodemon build/server.js\"",
     "prod": "cross-env MODE=production node -r dotenv/config ./build/server.js"
   },

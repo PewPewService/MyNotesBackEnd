@@ -23,6 +23,7 @@ class Server {
     }
 
     public configuration() {
+
         this.app.set('port', process.env.PORT || 3000);
         // this.app.use(express.json());
         this.app.use(this.bodyParser.json({limit: '100mb', extended: true}));
