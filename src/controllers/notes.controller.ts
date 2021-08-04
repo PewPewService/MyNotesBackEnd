@@ -12,7 +12,7 @@ export class NotesController {
 
     private multer = require('multer');
     private storage = this.multer.diskStorage({
-        destination: 'images/',
+        destination: path.resolve(__dirname, 'images'),
         filename: function(req: Request, file: Record<string, any>, cb: Function) {
             cb(null, Date.now() + path.extname(file.originalname));
         },
