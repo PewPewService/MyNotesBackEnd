@@ -24,7 +24,6 @@ class Server {
 
     public configuration() {
         this.app.set('port', process.env.PORT || 3000);
-        // this.app.use(express.json());
         this.app.use(this.bodyParser.json({limit: '100mb', extended: true}));
         this.app.use(express.static(__dirname+'/images'));
         this.app.use('/images', express.static('images'));
