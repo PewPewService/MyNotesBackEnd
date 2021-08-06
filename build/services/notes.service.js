@@ -119,6 +119,17 @@ var NotesService = /** @class */ (function () {
                 }
             });
         }); };
+        this.dropTable = function () { return __awaiter(_this, void 0, void 0, function () {
+            var result;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.NotesRepository.dropTable()];
+                    case 1:
+                        result = _a.sent();
+                        return [2 /*return*/, result];
+                }
+            });
+        }); };
         this.NotesRepository =
             typeorm_1.getConnection('MyNotes').getCustomRepository(notes_repository_1.NotesRepository);
     }

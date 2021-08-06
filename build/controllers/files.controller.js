@@ -12,7 +12,7 @@ var FilesController = /** @class */ (function () {
             var paths = [];
             for (var _i = 0, files_1 = files; _i < files_1.length; _i++) {
                 var file = files_1[_i];
-                paths.push(file.path);
+                paths.push('images/' + file.filename);
             }
             return paths;
         };

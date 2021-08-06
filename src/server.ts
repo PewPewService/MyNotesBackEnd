@@ -26,8 +26,7 @@ class Server {
     public configuration() {
         this.app.set('port', process.env.PORT || 3000);
         this.app.use(this.bodyParser.json({limit: '100mb', extended: true}));
-        this.app.use(express.static(path.resolve(__dirname, 'images')));
-        this.app.use('/images', express.static('images'));
+        this.app.use('/images', express.static(path.resolve(__dirname, '../images')));
         this.app.use(function(req: Request, res: Response, next: NextFunction) {
             res.header('Access-Control-Allow-Origin', '*');
             res.header('Access-Control-Allow-Headers',

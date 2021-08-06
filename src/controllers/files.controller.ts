@@ -5,7 +5,7 @@ export class FilesController {
     public getImagePaths = (files: Array<Record<string, string>>): Array<string> => {
         const paths: Array<string> = [];
         for (const file of files) {
-            paths.push(file.path);
+            paths.push('images/' + file.filename);
         }
         return paths;
     };

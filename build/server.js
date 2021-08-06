@@ -57,8 +57,7 @@ var Server = /** @class */ (function () {
     Server.prototype.configuration = function () {
         this.app.set('port', process.env.PORT || 3000);
         this.app.use(this.bodyParser.json({ limit: '100mb', extended: true }));
-        this.app.use(express_1.default.static(path_1.default.resolve(__dirname, 'images')));
-        this.app.use('/images', express_1.default.static('images'));
+        this.app.use('/images', express_1.default.static(path_1.default.resolve(__dirname, '../images')));
         this.app.use(function (req, res, next) {
             res.header('Access-Control-Allow-Origin', '*');
             res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
@@ -106,7 +105,7 @@ var Server = /** @class */ (function () {
                                 entities: [ConnEntities],
                                 synchronize: ConnSync,
                                 name: ConnName,
-                                ssl: { rejectUnauthorized: false },
+                                //ssl: { rejectUnauthorized: false },
                             })];
                     case 1:
                         _a.sent();

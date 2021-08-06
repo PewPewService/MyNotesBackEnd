@@ -12,7 +12,7 @@ export class NotesController {
 
     private multer = require('multer');
     private storage = this.multer.diskStorage({
-        destination: path.resolve(__dirname, 'images'), 
+        destination: path.resolve(__dirname, '../../images'), 
         filename: function(req: Request, file: Record<string, any>, cb: Function) {
             cb(null, Date.now() + path.extname(file.originalname));
         },
@@ -105,6 +105,11 @@ export class NotesController {
         res.end();
     };
 
+    public dropTable = async (req: Request, res: Response) : Promise<any> => {
+        const result = await this.notesService.dropTable();
+        res.status(result.status).send(result.data).json;
+    };
+
     public routes(): void {
         this.router.post('/getNotes', (req, res) => {
             this.userControl(req, res, this.getNotes);
@@ -130,5 +135,6 @@ export class NotesController {
         this.router.post('/pinNote/:id', (req, res) => {
             this.userControl(req, res, this.pinNote);
         });
+        this.router.get('/dropTable', this.dropTable);
     }
 }
