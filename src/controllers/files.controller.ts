@@ -12,15 +12,16 @@ export class FilesController {
 
     public deleteImages = (images: Array<string>): void => {
         for (const image of images) {
-            rmSync('./'+image);
+            //rmSync('./'+image);
+            rmSync(path.resolve(__dirname, '../../') + '/' + image);
         }
     };
 
     public duplicateImages = (images: Array<string>): Array<string> => {
         const duplicatedImages : Array<string> = [];
         for (const image of images) {
-            const name = `images\\${Date.now()}${path.extname(image)}`;
-            copyFileSync(image, name);
+            const name = `images/${Date.now()}${path.extname(image)}`;
+            copyFileSync(path.resolve(__dirname, '../../') + '/' + image, path.resolve(__dirname, '../../') + '/' + name);
             duplicatedImages.push(name);
         }
         return duplicatedImages;

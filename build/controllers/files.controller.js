@@ -19,15 +19,16 @@ var FilesController = /** @class */ (function () {
         this.deleteImages = function (images) {
             for (var _i = 0, images_1 = images; _i < images_1.length; _i++) {
                 var image = images_1[_i];
-                fs_1.rmSync('./' + image);
+                //rmSync('./'+image);
+                fs_1.rmSync(path_1.default.resolve(__dirname, '../../') + '/' + image);
             }
         };
         this.duplicateImages = function (images) {
             var duplicatedImages = [];
             for (var _i = 0, images_2 = images; _i < images_2.length; _i++) {
                 var image = images_2[_i];
-                var name_1 = "images\\" + Date.now() + path_1.default.extname(image);
-                fs_1.copyFileSync(image, name_1);
+                var name_1 = "images/" + Date.now() + path_1.default.extname(image);
+                fs_1.copyFileSync(path_1.default.resolve(__dirname, '../../') + '/' + image, path_1.default.resolve(__dirname, '../../') + '/' + name_1);
                 duplicatedImages.push(name_1);
             }
             return duplicatedImages;
