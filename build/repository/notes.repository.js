@@ -316,6 +316,7 @@ var NotesRepository = /** @class */ (function (_super) {
                         return [2 /*return*/, { status: 200, data: [notes, pagesCount] }];
                     case 6:
                         err_6 = _a.sent();
+                        console.log(err_6);
                         return [2 /*return*/, { status: 500, data: err_6 }];
                     case 7: return [2 /*return*/];
                 }

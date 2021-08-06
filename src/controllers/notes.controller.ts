@@ -41,6 +41,7 @@ export class NotesController {
 
     public createNote = async (req: any, res: Response, userId: number): Promise<any> => {
         const note = req.body;
+        if (typeof(note.tags) === 'string') note.tags = [note.tags];
         const images = this.filesController.getImagePaths(req.files);
         note.images = images;
         const NewNote = await this.notesService.addNote(note, userId);
@@ -57,6 +58,7 @@ export class NotesController {
 
     public editNote = async (req: any, res: Response, userId: number): Promise<any> => {
         const NoteData = req.body;
+        if (typeof(NoteData.tags) === 'string') NoteData.tags = [NoteData.tags];
         NoteData.leftImages = NoteData.leftImages ?
             NoteData.leftImages.split(',') : [];
         NoteData.deletedImages = NoteData.deletedImages ?

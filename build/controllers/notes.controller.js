@@ -82,6 +82,8 @@ var NotesController = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         note = req.body;
+                        if (typeof (note.tags) === 'string')
+                            note.tags = [note.tags];
                         images = this.filesController.getImagePaths(req.files);
                         note.images = images;
                         return [4 /*yield*/, this.notesService.addNote(note, userId)];
@@ -114,6 +116,8 @@ var NotesController = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         NoteData = req.body;
+                        if (typeof (NoteData.tags) === 'string')
+                            NoteData.tags = [NoteData.tags];
                         NoteData.leftImages = NoteData.leftImages ?
                             NoteData.leftImages.split(',') : [];
                         NoteData.deletedImages = NoteData.deletedImages ?

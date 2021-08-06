@@ -158,6 +158,7 @@ export class NotesRepository extends Repository<NotesEntity> {
                 .getMany();
             return {status: 200, data: [notes, pagesCount]};
         } catch (err) {
+            console.log(err);
             return {status: 500, data: err};
         }
     }
