@@ -73,6 +73,7 @@ class Server {
             entities: [ConnEntities],
             synchronize: ConnSync,
             name: ConnName,
+            ssl: { rejectUnauthorized: false },
         });
 
         this.NotesController = new NotesController();

@@ -106,6 +106,7 @@ var Server = /** @class */ (function () {
                                 entities: [ConnEntities],
                                 synchronize: ConnSync,
                                 name: ConnName,
+                                ssl: { rejectUnauthorized: false },
                             })];
                     case 1:
                         _a.sent();
