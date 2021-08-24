@@ -7,13 +7,13 @@
     "tsc": "tsc ",
     "lint": "eslint 'src/**/*.{js,ts,tsx}' --quiet --fix"
     "dev": "cross-env MODE=development concurrently \"tsc -w\" \"nodemon build/server.js\"",
-    "prod": "cross-env MODE=production node -r dotenv/config ./build/server.js"
+    "prod": "cross-env MODE=production node -r dotenv/config ./build/server.js",
+    "start": "cross-env MODE=production node -r dotenv/config ./build/server.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "axios": "^0.21.1",
-    "base64-img": "^1.0.4",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
     "cross-env": "^7.0.3",
@@ -21,7 +21,6 @@
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
     "multer": "^1.4.2",
-    "node-base64-img": "^1.0.1",
     "pg": "^8.6.0",
     "prettier": "^2.3.2",
     "typeorm": "^0.2.34"
@@ -38,6 +37,9 @@
     "formidable": "^1.2.2",
     "nodemon": "^2.0.12",
     "typescript": "^4.3.5"
+  },
+  "engines": {
+    "node": "14.16.0"
   },
   "repository": {
     "type": "git",

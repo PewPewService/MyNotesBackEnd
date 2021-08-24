@@ -2,6 +2,7 @@ import express, {NextFunction, Request, Response} from 'express';
 import {NotesController} from './controllers/notes.controller';
 import {createConnection} from 'typeorm';
 import {UsersConrtoller} from './controllers/users.controller';
+import path from 'path';
 import dotenv from 'dotenv';
 
 console.log('.env.' + process.env.MODE);
@@ -26,8 +27,7 @@ class Server {
 
         this.app.set('port', process.env.PORT || 3000);
         this.app.use(this.bodyParser.json({limit: '100mb', extended: true}));
-        this.app.use(express.static(__dirname+'/images'));
-        this.app.use('/images', express.static('images'));
+        this.app.use('/images', express.static(path.resolve(__dirname, '../images')));
         this.app.use(function(req: Request, res: Response, next: NextFunction) {
             res.header('Access-Control-Allow-Origin', '*');
             res.header('Access-Control-Allow-Headers',
@@ -73,6 +73,7 @@ class Server {
             entities: [ConnEntities],
             synchronize: ConnSync,
             name: ConnName,
+            ssl: { rejectUnauthorized: false },
         });
 
         this.NotesController = new NotesController();

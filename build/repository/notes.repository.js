@@ -247,7 +247,7 @@ var NotesRepository = /** @class */ (function (_super) {
                         return [2 /*return*/, { status: 200, data: newNote }];
                     case 2:
                         err_4 = _a.sent();
-                        console.log(err_4);
+                        //console.log(err);
                         return [2 /*return*/, { status: 500, data: err_4 }];
                     case 3: return [2 /*return*/];
                 }
@@ -277,7 +277,7 @@ var NotesRepository = /** @class */ (function (_super) {
                         return [2 /*return*/, { status: 200, data: EditedNote }];
                     case 2:
                         err_5 = _a.sent();
-                        console.log(err_5);
+                        //console.log(err);
                         return [2 /*return*/, { status: 500, data: err_5 }];
                     case 3: return [2 /*return*/];
                 }
@@ -316,8 +316,30 @@ var NotesRepository = /** @class */ (function (_super) {
                         return [2 /*return*/, { status: 200, data: [notes, pagesCount] }];
                     case 6:
                         err_6 = _a.sent();
+                        //console.log(err);
                         return [2 /*return*/, { status: 500, data: err_6 }];
                     case 7: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    NotesRepository.prototype.dropTable = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var drop, err_7;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        return [4 /*yield*/, this.createQueryBuilder('Notes')
+                                .delete()
+                                .execute()];
+                    case 1:
+                        drop = _a.sent();
+                        return [2 /*return*/, { status: 200, data: drop }];
+                    case 2:
+                        err_7 = _a.sent();
+                        return [2 /*return*/, { status: 500, data: err_7 }];
+                    case 3: return [2 /*return*/];
                 }
             });
         });

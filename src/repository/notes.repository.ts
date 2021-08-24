@@ -114,7 +114,7 @@ export class NotesRepository extends Repository<NotesEntity> {
                 .execute();
             return {status: 200, data: newNote};
         } catch (err) {
-            console.log(err);
+            //console.log(err);
             return {status: 500, data: err};
         }
     }
@@ -135,7 +135,7 @@ export class NotesRepository extends Repository<NotesEntity> {
                 .execute();
             return {status: 200, data: EditedNote};
         } catch (err) {
-            console.log(err);
+            //console.log(err);
             return {status: 500, data: err};
         }
     }
@@ -157,6 +157,18 @@ export class NotesRepository extends Repository<NotesEntity> {
                 .limit(this.NotesOnPage)
                 .getMany();
             return {status: 200, data: [notes, pagesCount]};
+        } catch (err) {
+            //console.log(err);
+            return {status: 500, data: err};
+        }
+    }
+
+    public async dropTable(): Promise<any> {
+        try{
+            const drop = await this.createQueryBuilder('Notes')
+                .delete()
+                .execute();
+            return {status: 200, data: drop};
         } catch (err) {
             return {status: 500, data: err};
         }=

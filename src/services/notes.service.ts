@@ -46,4 +46,9 @@ export class NotesService {
           await this.NotesRepository.findNotes(userId, page, pinned, query);
         return result;
     };
+
+    public dropTable = async (): Promise<any> => {
+        const result = await this.NotesRepository.dropTable();
+        return result;
+    }
 }

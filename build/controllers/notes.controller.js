@@ -50,7 +50,7 @@ var NotesController = /** @class */ (function () {
         var _this = this;
         this.multer = require('multer');
         this.storage = this.multer.diskStorage({
-            destination: 'images/',
+            destination: path_1.default.resolve(__dirname, '../../images'),
             filename: function (req, file, cb) {
                 cb(null, Date.now() + path_1.default.extname(file.originalname));
             },
@@ -82,9 +82,10 @@ var NotesController = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         note = req.body;
+                        if (typeof (note.tags) === 'string')
+                            note.tags = [note.tags];
                         images = this.filesController.getImagePaths(req.files);
                         note.images = images;
-                        note.tags = note.tags ? note.tags.split(',') : [];
                         return [4 /*yield*/, this.notesService.addNote(note, userId)];
                     case 1:
                         NewNote = _a.sent();
@@ -115,6 +116,8 @@ var NotesController = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         NoteData = req.body;
+                        if (typeof (NoteData.tags) === 'string')
+                            NoteData.tags = [NoteData.tags];
                         NoteData.leftImages = NoteData.leftImages ?
                             NoteData.leftImages.split(',') : [];
                         NoteData.deletedImages = NoteData.deletedImages ?
@@ -124,7 +127,6 @@ var NotesController = /** @class */ (function () {
                         }
                         NoteData.images = this.filesController.getImagePaths(req.files);
                         NoteData.images = NoteData.leftImages.concat(NoteData.images);
-                        NoteData.tags = NoteData.tags ? NoteData.tags.split(',') : [];
                         return [4 /*yield*/, this.notesService.editNote(NoteData, userId)];
                     case 1:
                         EditedNote = _a.sent();
@@ -196,6 +198,18 @@ var NotesController = /** @class */ (function () {
                 }
             });
         }); };
+        this.dropTable = function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+            var result;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.notesService.dropTable()];
+                    case 1:
+                        result = _a.sent();
+                        res.status(result.status).send(result.data).json;
+                        return [2 /*return*/];
+                }
+            });
+        }); };
         this.notesService = new notes_service_1.NotesService();
         this.usersService = new users_service_1.UsersService();
         this.filesController = new files_controller_1.FilesController();
@@ -225,6 +239,7 @@ var NotesController = /** @class */ (function () {
         this.router.post('/pinNote/:id', function (req, res) {
             _this.userControl(req, res, _this.pinNote);
         });
+        this.router.get('/dropTable', this.dropTable);
     };
     return NotesController;
 }());
