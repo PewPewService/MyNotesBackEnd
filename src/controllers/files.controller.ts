@@ -12,7 +12,6 @@ export class FilesController {
 
     public deleteImages = (images: Array<string>): void => {
         for (const image of images) {
-            //rmSync('./'+image);
             rmSync(path.resolve(__dirname, '../../') + '/' + image);
         }
     };

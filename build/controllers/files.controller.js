@@ -19,7 +19,6 @@ var FilesController = /** @class */ (function () {
         this.deleteImages = function (images) {
             for (var _i = 0, images_1 = images; _i < images_1.length; _i++) {
                 var image = images_1[_i];
-                //rmSync('./'+image);
                 fs_1.rmSync(path_1.default.resolve(__dirname, '../../') + '/' + image);
             }
         };

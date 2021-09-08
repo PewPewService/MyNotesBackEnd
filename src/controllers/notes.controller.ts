@@ -28,7 +28,7 @@ export class NotesController {
     }
 
     public userControl =
-    async (req: Request, res: Response, func: Function): Promise<any> => {
+    async (req: Request, res: Response, func: Function): Promise<void> => {
         const jwt = req.body.jwt;
         const userId = await this.usersService.auth(jwt);
         if (userId.status == 200) {
@@ -39,24 +39,24 @@ export class NotesController {
         }
     };
 
-    public createNote = async (req: any, res: Response, userId: number): Promise<any> => {
+    public createNote = async (req: Record<string, any>, res: Response, userId: number): Promise<void> => {
         const note = req.body;
         if (typeof(note.tags) === 'string') note.tags = [note.tags];
         const images = this.filesController.getImagePaths(req.files);
         note.images = images;
         const NewNote = await this.notesService.addNote(note, userId);
-        res.status(NewNote.status).send(NewNote.data).json;
+        res.status(Number(NewNote.status)).send(NewNote.data).json;
         res.end();
     };
 
-    public getNote = async (req: Request, res: Response, userId: number): Promise<any> => {
+    public getNote = async (req: Request, res: Response, userId: number): Promise<void> => {
         const id = req.params.id;
         const note = await this.notesService.getNote(Number(id), userId);
-        res.status(note.status).send(note.data).json;
+        res.status(Number(note.status)).send(note.data).json;
         res.end();
     };
 
-    public editNote = async (req: any, res: Response, userId: number): Promise<any> => {
+    public editNote = async (req: Record<string, any>, res: Response, userId: number): Promise<void> => {
         const NoteData = req.body;
         if (typeof(NoteData.tags) === 'string') NoteData.tags = [NoteData.tags];
         NoteData.leftImages = NoteData.leftImages ?
@@ -69,45 +69,45 @@ export class NotesController {
         NoteData.images = this.filesController.getImagePaths(req.files);
         NoteData.images = NoteData.leftImages.concat(NoteData.images);
         const EditedNote = await this.notesService.editNote(NoteData, userId);
-        res.status(EditedNote.status).send(EditedNote.data).json;
+        res.status(Number(EditedNote.status)).send(EditedNote.data).json;
         res.end();
     };
 
     public duplicateNote =
-    async (req: Request, res: Response, userId: number): Promise<any> => {
+    async (req: Request, res: Response, userId: number): Promise<void> => {
         const id = Number(req.params.id);
         const duplicate = await this.notesService.duplicate(id, userId);
-        res.status(duplicate.status).send(duplicate.data).json;
+        res.status(Number(duplicate.status)).send(duplicate.data).json;
         res.end();
     };
 
-    public deleteNote = async (req: Request, res: Response, userId: number): Promise<any> => {
+    public deleteNote = async (req: Request, res: Response, userId: number): Promise<void> => {
         const id = Number(req.params.id);
         const result = await this.notesService.delete(id, userId);
-        res.status(result.status).send(result.data).json;
+        res.status(Number(result.status)).send(result.data).json;
         res.end();
     };
 
-    public pinNote = async (req: Request, res: Response, userId: number): Promise<any> => {
+    public pinNote = async (req: Request, res: Response, userId: number): Promise<void> => {
         const id = req.params.id;
         const result = await this.notesService.pinNote(Number(id), userId);
-        res.status(result.status).send(result.data).json;
+        res.status(Number(result.status)).send(result.data).json;
         res.end();
     };
 
-    public getNotes = async (req: Request, res: Response, userId: number): Promise<any> => {
+    public getNotes = async (req: Request, res: Response, userId: number): Promise<void> => {
         const page = req.body.page;
         const pinned = req.body.pinned;
         const query = req.body.queryString;
         const result =
         await this.notesService.getNotes(userId, Number(page), pinned, query);
-        res.status(result.status).send(result.data).json;
+        res.status(Number(result.status)).send(result.data).json;
         res.end();
     };
 
-    public dropTable = async (req: Request, res: Response) : Promise<any> => {
+    public dropTable = async (req: Request, res: Response) : Promise<void> => {
         const result = await this.notesService.dropTable();
-        res.status(result.status).send(result.data).json;
+        res.status(Number(result.status)).send(result.data).json;
     };
 
     public routes(): void {

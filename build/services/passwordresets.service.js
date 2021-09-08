@@ -36,70 +36,43 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.UsersService = void 0;
+exports.PasswordResetsService = void 0;
 var typeorm_1 = require("typeorm");
-var users_repository_1 = require("../repository/users.repository");
-var UsersService = /** @class */ (function () {
-    function UsersService() {
-        var _this = this;
-        this.register = function (user) { return __awaiter(_this, void 0, void 0, function () {
-            var result;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.UsersRepository.register(user)];
-                    case 1:
-                        result = _a.sent();
-                        return [2 /*return*/, result];
-                }
-            });
-        }); };
-        this.login = function (user) { return __awaiter(_this, void 0, void 0, function () {
-            var result;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.UsersRepository.login(user)];
-                    case 1:
-                        result = _a.sent();
-                        return [2 /*return*/, result];
-                }
-            });
-        }); };
-        this.auth = function (jwt) { return __awaiter(_this, void 0, void 0, function () {
-            var result;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.UsersRepository.auth(jwt)];
-                    case 1:
-                        result = _a.sent();
-                        return [2 /*return*/, result];
-                }
-            });
-        }); };
-        this.reset = function (email, link) { return __awaiter(_this, void 0, void 0, function () {
-            var result;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.UsersRepository.reset(email, link)];
-                    case 1:
-                        result = _a.sent();
-                        return [2 /*return*/, result];
-                }
-            });
-        }); };
-        this.changePassword = function (data) { return __awaiter(_this, void 0, void 0, function () {
-            var result;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.UsersRepository.changePassword(data)];
-                    case 1:
-                        result = _a.sent();
-                        return [2 /*return*/, result];
-                }
-            });
-        }); };
-        this.UsersRepository =
-            typeorm_1.getConnection('MyNotes').getCustomRepository(users_repository_1.UsersRepository);
+var passwordresets_repository_1 = require("../repository/passwordresets.repository");
+var PasswordResetsService = /** @class */ (function () {
+    function PasswordResetsService() {
+        this.PasswordResetsRepository =
+            typeorm_1.getConnection('MyNotes').getCustomRepository(passwordresets_repository_1.PasswordResetsRepository);
     }
-    return UsersService;
+    ;
+    PasswordResetsService.prototype.generatePasswordResetToken = function (email) {
+        return __awaiter(this, void 0, void 0, function () {
+            var result;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.PasswordResetsRepository.generatePasswordReset(email)];
+                    case 1:
+                        result = _a.sent();
+                        return [2 /*return*/, result];
+                }
+            });
+        });
+    };
+    ;
+    PasswordResetsService.prototype.checkToken = function (token) {
+        return __awaiter(this, void 0, void 0, function () {
+            var result;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.PasswordResetsRepository.checkToken(token)];
+                    case 1:
+                        result = _a.sent();
+                        return [2 /*return*/, result];
+                }
+            });
+        });
+    };
+    ;
+    return PasswordResetsService;
 }());
-exports.UsersService = UsersService;
+exports.PasswordResetsService = PasswordResetsService;

@@ -1,17 +1,17 @@
-import express, {NextFunction, Request, Response} from 'express';
-import {NotesController} from './controllers/notes.controller';
-import {createConnection} from 'typeorm';
-import {UsersConrtoller} from './controllers/users.controller';
+import express, { NextFunction, Request, Response } from 'express';
+import { NotesController } from './controllers/notes.controller';
+import { createConnection } from 'typeorm';
+import { UsersConrtoller } from './controllers/users.controller';
+import { WebSocket } from './websocket-server';
 import path from 'path';
 import dotenv from 'dotenv';
-
-console.log('.env.' + process.env.MODE);
 
 dotenv.config({ path: '.env.' + process.env.MODE });
 
 class Server {
     private NotesController!: NotesController;
     private UsersController!: UsersConrtoller;
+    private WebSocket!: WebSocket;
 
     private bodyParser;
     private app: express.Application;
@@ -21,6 +21,7 @@ class Server {
         this.bodyParser = require('body-parser');
         this.configuration();
         this.routes();
+        this.WebSocket = new WebSocket();
     }
 
     public configuration() {
@@ -35,7 +36,7 @@ class Server {
         });
     }
 
-    public uploadFiles(req: any, res: Response) {
+    public uploadFiles(req: Record<string, any>, res: Response) {
         try {
             console.log(req.body);
             const imagesPaths: Array<string> = [];
@@ -52,14 +53,14 @@ class Server {
 
     public async routes() {
         const ConnType : any = String(process.env.NODE_CONNECTION_TYPE);
-        const ConnHost : any = String(process.env.NODE_CONNECTION_HOST);
-        const ConnPort : any = Number(process.env.NODE_CONNECTION_PORT);
-        const ConnUser : any = String(process.env.NODE_CONNECTION_USER);
-        const ConnPassword : any = String(process.env.NODE_CONNECTION_PASSWORD);
-        const ConnDB : any = String(process.env.NODE_CONNECTION_DB);
-        const ConnEntities : any = String(process.env.NODE_CONNECTION_ENTITIES);
-        const ConnSync : any = Boolean(process.env.NODE_CONNECTION_SYNCHRONIZE);
-        const ConnName : any = String(process.env.NODE_CONNECTION_NAME);
+        const ConnHost = String(process.env.NODE_CONNECTION_HOST);
+        const ConnPort = Number(process.env.NODE_CONNECTION_PORT);
+        const ConnUser = String(process.env.NODE_CONNECTION_USER);
+        const ConnPassword = String(process.env.NODE_CONNECTION_PASSWORD);
+        const ConnDB = String(process.env.NODE_CONNECTION_DB);
+        const ConnEntities = String(process.env.NODE_CONNECTION_ENTITIES);
+        const ConnSync = Boolean(process.env.NODE_CONNECTION_SYNCHRONIZE);
+        const ConnName = String(process.env.NODE_CONNECTION_NAME);
 
 
         await createConnection({
@@ -78,7 +79,7 @@ class Server {
         this.NotesController = new NotesController();
         this.UsersController = new UsersConrtoller();
         this.app.get('/', (req: Request, res: Response) => {
-            res.send('test');
+            res.send( req.get('host') );
         });
         this.app.use('/api/notes/', this.NotesController.router);
         this.app.use('/api/users/', this.UsersController.router);

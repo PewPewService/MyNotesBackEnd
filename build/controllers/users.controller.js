@@ -51,7 +51,7 @@ var UsersConrtoller = /** @class */ (function () {
                         return [4 /*yield*/, this.usersService.register(user)];
                     case 1:
                         result = _a.sent();
-                        res.status(result.status).send(result.data);
+                        res.status(Number(result.status)).send(result.data);
                         res.end();
                         return [2 /*return*/];
                 }
@@ -66,7 +66,36 @@ var UsersConrtoller = /** @class */ (function () {
                         return [4 /*yield*/, this.usersService.login(user)];
                     case 1:
                         result = _a.sent();
-                        res.status(result.status).send(result.data);
+                        res.status(Number(result.status)).send(result.data);
+                        res.end();
+                        return [2 /*return*/];
+                }
+            });
+        }); };
+        this.passwordReset = function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+            var email, link, result;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        email = req.body.email;
+                        link = req.body.route;
+                        return [4 /*yield*/, this.usersService.reset(email, link)];
+                    case 1:
+                        result = _a.sent();
+                        res.status(Number(result.status)).send(result.data);
+                        res.end();
+                        return [2 /*return*/];
+                }
+            });
+        }); };
+        this.ChangePassword = function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+            var result;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.usersService.changePassword(req.body.data)];
+                    case 1:
+                        result = _a.sent();
+                        res.status(Number(result.status)).send(result.data);
                         res.end();
                         return [2 /*return*/];
                 }
@@ -79,7 +108,10 @@ var UsersConrtoller = /** @class */ (function () {
     UsersConrtoller.prototype.routes = function () {
         this.router.post('/register', this.register);
         this.router.post('/login', this.login);
+        this.router.post('/passwordReset', this.passwordReset);
+        this.router.post('/changePassword', this.ChangePassword);
     };
+    ;
     return UsersConrtoller;
 }());
 exports.UsersConrtoller = UsersConrtoller;

@@ -43,9 +43,9 @@ var express_1 = __importDefault(require("express"));
 var notes_controller_1 = require("./controllers/notes.controller");
 var typeorm_1 = require("typeorm");
 var users_controller_1 = require("./controllers/users.controller");
+var websocket_server_1 = require("./websocket-server");
 var path_1 = __importDefault(require("path"));
 var dotenv_1 = __importDefault(require("dotenv"));
-console.log('.env.' + process.env.MODE);
 dotenv_1.default.config({ path: '.env.' + process.env.MODE });
 var Server = /** @class */ (function () {
     function Server() {
@@ -53,6 +53,7 @@ var Server = /** @class */ (function () {
         this.bodyParser = require('body-parser');
         this.configuration();
         this.routes();
+        this.WebSocket = new websocket_server_1.WebSocket();
     }
     Server.prototype.configuration = function () {
         this.app.set('port', process.env.PORT || 3000);
@@ -105,14 +106,14 @@ var Server = /** @class */ (function () {
                                 entities: [ConnEntities],
                                 synchronize: ConnSync,
                                 name: ConnName,
-                                ssl: { rejectUnauthorized: false },
+                                //ssl: { rejectUnauthorized: false },
                             })];
                     case 1:
                         _a.sent();
                         this.NotesController = new notes_controller_1.NotesController();
                         this.UsersController = new users_controller_1.UsersConrtoller();
                         this.app.get('/', function (req, res) {
-                            res.send('test');
+                            res.send(req.get('host'));
                         });
                         this.app.use('/api/notes/', this.NotesController.router);
                         this.app.use('/api/users/', this.UsersController.router);

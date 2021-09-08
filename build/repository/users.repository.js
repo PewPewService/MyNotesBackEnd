@@ -56,21 +56,49 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UsersRepository = void 0;
 var typeorm_1 = require("typeorm");
 var users_entity_1 = require("../database/entities/users.entity");
+var passwordresets_service_1 = require("../services/passwordresets.service");
+var email_service_1 = __importDefault(require("../services/email.service"));
 var UsersRepository = /** @class */ (function (_super) {
     __extends(UsersRepository, _super);
     function UsersRepository() {
         var _this = _super !== null && _super.apply(this, arguments) || this;
         _this.bcrypt = require('bcryptjs');
         _this.jwt = require('jsonwebtoken');
+        _this.PasswordResetsService = new passwordresets_service_1.PasswordResetsService();
         return _this;
     }
+    UsersRepository.prototype.checkEmail = function (email) {
+        return __awaiter(this, void 0, void 0, function () {
+            var user, err_1;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        return [4 /*yield*/, this.createQueryBuilder('Users')
+                                .select()
+                                .where('Users.email like :email', { email: email })
+                                .getOneOrFail()];
+                    case 1:
+                        user = _a.sent();
+                        return [2 /*return*/, { status: "200", data: user }];
+                    case 2:
+                        err_1 = _a.sent();
+                        return [2 /*return*/, { status: "400", data: err_1 }];
+                    case 3: return [2 /*return*/];
+                }
+            });
+        });
+    };
     UsersRepository.prototype.checkExistence = function (username, email) {
         return __awaiter(this, void 0, void 0, function () {
-            var CheckEmail, CheckUsername, response, status_1, err_1;
+            var CheckEmail, CheckUsername, response, status_1, err_2;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -88,25 +116,26 @@ var UsersRepository = /** @class */ (function (_super) {
                     case 2:
                         CheckUsername = _a.sent();
                         response = '';
-                        status_1 = 200;
+                        status_1 = "200";
                         response += CheckEmail ? 'email' : '';
                         response += (CheckEmail + CheckUsername == 2) ? ' and ' : '';
                         response += CheckUsername ? 'username' : '';
                         response += (CheckEmail + CheckUsername) ? ' is already in use!' : '';
                         if (response)
-                            status_1 = 250;
+                            status_1 = "406";
                         return [2 /*return*/, { status: status_1, data: response }];
                     case 3:
-                        err_1 = _a.sent();
-                        return [2 /*return*/, { status: 250, data: err_1 }];
+                        err_2 = _a.sent();
+                        return [2 /*return*/, { status: "500", data: err_2 }];
                     case 4: return [2 /*return*/];
                 }
             });
         });
     };
+    ;
     UsersRepository.prototype.register = function (user) {
         return __awaiter(this, void 0, void 0, function () {
-            var salt, hasPassword, existence, LoggedUser, err_2;
+            var salt, hashPassword, existence, LoggedUser, err_3;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, this.bcrypt.genSalt(10)];
@@ -114,11 +143,11 @@ var UsersRepository = /** @class */ (function (_super) {
                         salt = _a.sent();
                         return [4 /*yield*/, this.bcrypt.hash(user.password, salt)];
                     case 2:
-                        hasPassword = _a.sent();
+                        hashPassword = _a.sent();
                         return [4 /*yield*/, this.checkExistence(user.username, user.email)];
                     case 3:
                         existence = _a.sent();
-                        if (existence.status != 200) {
+                        if (existence.status != "200") {
                             return [2 /*return*/, existence];
                         }
                         _a.label = 4;
@@ -129,7 +158,7 @@ var UsersRepository = /** @class */ (function (_super) {
                                 .values({
                                 email: user.email,
                                 username: user.username,
-                                password: hasPassword,
+                                password: hashPassword,
                             })
                                 .execute()];
                     case 5:
@@ -139,16 +168,17 @@ var UsersRepository = /** @class */ (function (_super) {
                         LoggedUser = _a.sent();
                         return [2 /*return*/, LoggedUser];
                     case 7:
-                        err_2 = _a.sent();
-                        return [2 /*return*/, { status: 250, data: err_2 }];
+                        err_3 = _a.sent();
+                        return [2 /*return*/, { status: "500", data: err_3 }];
                     case 8: return [2 /*return*/];
                 }
             });
         });
     };
+    ;
     UsersRepository.prototype.login = function (data) {
         return __awaiter(this, void 0, void 0, function () {
-            var user, validPass, token, err_3;
+            var user, validPass, token, err_4;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -160,24 +190,25 @@ var UsersRepository = /** @class */ (function (_super) {
                     case 1:
                         user = _a.sent();
                         if (!user)
-                            return [2 /*return*/, { status: 240, data: 'This user does not exist!' }];
+                            return [2 /*return*/, { status: "404", data: 'This user does not exist!' }];
                         return [4 /*yield*/, this.bcrypt.compare(data.password, user === null || user === void 0 ? void 0 : user.password)];
                     case 2:
                         validPass = _a.sent();
                         if (!validPass)
-                            return [2 /*return*/, { status: 240, data: 'invalid pair!' }];
+                            return [2 /*return*/, { status: "404", data: 'invalid pair!' }];
                         return [4 /*yield*/, this.jwt.sign({ id: user === null || user === void 0 ? void 0 : user.id }, 'secret', { expiresIn: '24h' })];
                     case 3:
                         token = _a.sent();
-                        return [2 /*return*/, { status: 200, data: { jwt: token, user: user === null || user === void 0 ? void 0 : user.username } }];
+                        return [2 /*return*/, { status: "200", data: { jwt: token, user: user === null || user === void 0 ? void 0 : user.username } }];
                     case 4:
-                        err_3 = _a.sent();
-                        return [2 /*return*/, { status: 250, data: err_3 }];
+                        err_4 = _a.sent();
+                        return [2 /*return*/, { status: "500", data: err_4 }];
                     case 5: return [2 /*return*/];
                 }
             });
         });
     };
+    ;
     UsersRepository.prototype.auth = function (data) {
         return __awaiter(this, void 0, void 0, function () {
             var result;
@@ -185,10 +216,10 @@ var UsersRepository = /** @class */ (function (_super) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, this.jwt.verify(data, 'secret', function (err, decoded) {
                             if (!err) {
-                                return { status: 200, data: decoded.id };
+                                return { status: "200", data: decoded.id };
                             }
                             else {
-                                return { status: 250, data: err };
+                                return { status: "500", data: err };
                             }
                         })];
                     case 1:
@@ -198,6 +229,73 @@ var UsersRepository = /** @class */ (function (_super) {
             });
         });
     };
+    ;
+    UsersRepository.prototype.reset = function (email, link) {
+        return __awaiter(this, void 0, void 0, function () {
+            var user, token, err_5;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 6, , 7]);
+                        return [4 /*yield*/, this.checkEmail(email)];
+                    case 1:
+                        user = _a.sent();
+                        if (!(user.status == "200")) return [3 /*break*/, 5];
+                        return [4 /*yield*/, this.PasswordResetsService.generatePasswordResetToken(email)];
+                    case 2:
+                        token = _a.sent();
+                        if (!(token.status == "200")) return [3 /*break*/, 4];
+                        return [4 /*yield*/, email_service_1.default(email, "" + user.data.username, link + "?token=" + token.data)];
+                    case 3: return [2 /*return*/, _a.sent()];
+                    case 4: return [2 /*return*/, token];
+                    case 5: return [2 /*return*/, { status: "400", data: "This email does not exist in our database!" }];
+                    case 6:
+                        err_5 = _a.sent();
+                        return [2 /*return*/, { status: "500", data: err_5 }];
+                    case 7: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    ;
+    UsersRepository.prototype.changePassword = function (data) {
+        return __awaiter(this, void 0, void 0, function () {
+            var email, salt, hashPassword, err_6;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 7, , 8]);
+                        return [4 /*yield*/, this.PasswordResetsService.checkToken(data.token)];
+                    case 1:
+                        email = _a.sent();
+                        if (!(email.status == "200")) return [3 /*break*/, 5];
+                        return [4 /*yield*/, this.bcrypt.genSalt(10)];
+                    case 2:
+                        salt = _a.sent();
+                        return [4 /*yield*/, this.bcrypt.hash(data.password, salt)];
+                    case 3:
+                        hashPassword = _a.sent();
+                        return [4 /*yield*/, this.createQueryBuilder('Users')
+                                .update()
+                                .set({
+                                password: hashPassword,
+                            })
+                                .where('email like :email', { email: "" + email.data })
+                                .execute()];
+                    case 4:
+                        _a.sent();
+                        return [2 /*return*/, { status: "200", data: 'Your password has been successfully changed!' }];
+                    case 5: return [2 /*return*/, email];
+                    case 6: return [3 /*break*/, 8];
+                    case 7:
+                        err_6 = _a.sent();
+                        return [2 /*return*/, { status: "500", data: err_6 }];
+                    case 8: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    ;
     UsersRepository = __decorate([
         typeorm_1.EntityRepository(users_entity_1.UsersEntity)
     ], UsersRepository);

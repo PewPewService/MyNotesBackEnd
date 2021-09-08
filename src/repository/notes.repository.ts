@@ -1,4 +1,4 @@
-import {EntityRepository, Repository} from 'typeorm';
+import {DeleteResult, EntityRepository, InsertResult, Repository, UpdateResult} from 'typeorm';
 import {NotesEntity} from '../database/entities/notes.entity';
 import {FilesController} from '../controllers/files.controller';
 
@@ -15,16 +15,15 @@ export class NotesRepository extends Repository<NotesEntity> {
         return pages;
     }
 
-    public async getNote(id: number, UserId: number): Promise<any> {
+    public async getNote(id: number, userId: number): Promise<Record<string, any>> {
         try {
             const note = await this.createQueryBuilder('Notes')
                 .select()
                 .where('id = :id and Notes.userId = :userId',
-                    {id: id, userId: UserId})
+                    {id, userId})
                 .getOne();
             if (!note) return {status: 400, data: 'Note wasn\'t found'};
             else {
-                // note.images = await this.getImages(note.images);
                 return {status: 200, data: note};
             }
         } catch (err) {
@@ -32,9 +31,9 @@ export class NotesRepository extends Repository<NotesEntity> {
         }
     }
 
-    public async duplicateNote(id: number, UserId: number): Promise<any> {
+    public async duplicateNote(id: number, UserId: number): Promise<Record<string, string | number>> {
         const note = await this.getNote(id, UserId);
-        if (note.status==200) {
+        if (note.status == 200) {
             note.data.images =
           this.filesController.duplicateImages(note.data.images);
             await this.createQueryBuilder('Notes')
@@ -46,7 +45,7 @@ export class NotesRepository extends Repository<NotesEntity> {
     }
 
     public async findNotes(UserId: number,
-        page: number, pinned: boolean, query: any): Promise<any> {
+        page: number, pinned: boolean, query: any): Promise<Record<string, any>> {
         let queryString = '';
         let i=0;
         const queryValues: any = {};
@@ -66,14 +65,14 @@ export class NotesRepository extends Repository<NotesEntity> {
         return notes;
     }
 
-    public async deleteNote(id: number, UserId: number): Promise<any> {
-        const note = await this.getNote(id, UserId);
+    public async deleteNote(id: number, userId: number): Promise<Record<string, string | number | unknown>> {
+        const note = await this.getNote(id, userId);
         if (note.status == 200) {
             try {
                 this.filesController.deleteImages(note.data.images);
                 await this.createQueryBuilder('Notes')
                     .delete()
-                    .where('id = :id and userId = :userId', {id: id, userId: UserId})
+                    .where('id = :id and userId = :userId', {id, userId})
                     .execute();
                 return {status: 200, data: 'Success!'};
             } catch (err) {
@@ -82,14 +81,14 @@ export class NotesRepository extends Repository<NotesEntity> {
         } else return note;
     }
 
-    public async pinNote(id: number, UserId: number): Promise<any> {
+    public async pinNote(id: number, userId: number): Promise<Record<string, string | number | unknown>> {
         try {
-            const note = await this.getNote(id, UserId);
+            const note = await this.getNote(id, userId);
             if (note.status == 200) {
                 await this.createQueryBuilder('Notes')
                     .update()
                     .set({'pinned': !note.data.pinned})
-                    .where('id = :id and userId = :userId', {id: id, userId: UserId})
+                    .where('id = :id and userId = :userId', {id, userId})
                     .execute();
                 return {status: 200, data: 'Success!'};
             }
@@ -99,7 +98,7 @@ export class NotesRepository extends Repository<NotesEntity> {
         }
     }
 
-    public async addNote(note: any, UserId: number): Promise<any> {
+    public async addNote(note: any, UserId: number): Promise<Record<string, number | InsertResult | unknown>> {
         try {
             const newNote = await this.createQueryBuilder('Notes')
                 .insert()
@@ -114,12 +113,11 @@ export class NotesRepository extends Repository<NotesEntity> {
                 .execute();
             return {status: 200, data: newNote};
         } catch (err) {
-            //console.log(err);
             return {status: 500, data: err};
         }
     }
 
-    public async editNote(note: any, UserId: number): Promise<any> {
+    public async editNote(note: any, userId: number): Promise<Record<string, number | UpdateResult | unknown>> {
         try {
             const EditedNote = await this.createQueryBuilder('Notes')
                 .update()
@@ -131,23 +129,22 @@ export class NotesRepository extends Repository<NotesEntity> {
                     pinned: note.pinned,
                 })
                 .where('id = :id and userId = :userId',
-                    {id: note.id, userId: UserId})
+                    {id: note.id, userId})
                 .execute();
             return {status: 200, data: EditedNote};
         } catch (err) {
-            //console.log(err);
             return {status: 500, data: err};
         }
     }
 
-    public async getNotes(UserId: number,
-        page: number, pinned = false, where : any = {}): Promise<any> {
+    public async getNotes(userId: number,
+        page: number, pinned = false, where : any = {}): Promise<Record<string, any>> {
         try {
             const offset = page * this.NotesOnPage;
             let notes: any = await this.createQueryBuilder('Notes')
                 .select()
                 .where('Notes.userId = :userId and pinned = :pinned',
-                    {userId: UserId, pinned: pinned});
+                    {userId, pinned});
             if (Object.keys(where).length) {
                 notes = await notes.andWhere(where.query, where.values);
             }
@@ -158,12 +155,11 @@ export class NotesRepository extends Repository<NotesEntity> {
                 .getMany();
             return {status: 200, data: [notes, pagesCount]};
         } catch (err) {
-            //console.log(err);
             return {status: 500, data: err};
         }
     }
 
-    public async dropTable(): Promise<any> {
+    public async dropTable(): Promise<Record<string, number | DeleteResult | unknown>> {
         try{
             const drop = await this.createQueryBuilder('Notes')
                 .delete()

@@ -89,7 +89,7 @@ var NotesController = /** @class */ (function () {
                         return [4 /*yield*/, this.notesService.addNote(note, userId)];
                     case 1:
                         NewNote = _a.sent();
-                        res.status(NewNote.status).send(NewNote.data).json;
+                        res.status(Number(NewNote.status)).send(NewNote.data).json;
                         res.end();
                         return [2 /*return*/];
                 }
@@ -104,7 +104,7 @@ var NotesController = /** @class */ (function () {
                         return [4 /*yield*/, this.notesService.getNote(Number(id), userId)];
                     case 1:
                         note = _a.sent();
-                        res.status(note.status).send(note.data).json;
+                        res.status(Number(note.status)).send(note.data).json;
                         res.end();
                         return [2 /*return*/];
                 }
@@ -130,7 +130,7 @@ var NotesController = /** @class */ (function () {
                         return [4 /*yield*/, this.notesService.editNote(NoteData, userId)];
                     case 1:
                         EditedNote = _a.sent();
-                        res.status(EditedNote.status).send(EditedNote.data).json;
+                        res.status(Number(EditedNote.status)).send(EditedNote.data).json;
                         res.end();
                         return [2 /*return*/];
                 }
@@ -145,7 +145,7 @@ var NotesController = /** @class */ (function () {
                         return [4 /*yield*/, this.notesService.duplicate(id, userId)];
                     case 1:
                         duplicate = _a.sent();
-                        res.status(duplicate.status).send(duplicate.data).json;
+                        res.status(Number(duplicate.status)).send(duplicate.data).json;
                         res.end();
                         return [2 /*return*/];
                 }
@@ -160,7 +160,7 @@ var NotesController = /** @class */ (function () {
                         return [4 /*yield*/, this.notesService.delete(id, userId)];
                     case 1:
                         result = _a.sent();
-                        res.status(result.status).send(result.data).json;
+                        res.status(Number(result.status)).send(result.data).json;
                         res.end();
                         return [2 /*return*/];
                 }
@@ -175,7 +175,7 @@ var NotesController = /** @class */ (function () {
                         return [4 /*yield*/, this.notesService.pinNote(Number(id), userId)];
                     case 1:
                         result = _a.sent();
-                        res.status(result.status).send(result.data).json;
+                        res.status(Number(result.status)).send(result.data).json;
                         res.end();
                         return [2 /*return*/];
                 }
@@ -192,7 +192,7 @@ var NotesController = /** @class */ (function () {
                         return [4 /*yield*/, this.notesService.getNotes(userId, Number(page), pinned, query)];
                     case 1:
                         result = _a.sent();
-                        res.status(result.status).send(result.data).json;
+                        res.status(Number(result.status)).send(result.data).json;
                         res.end();
                         return [2 /*return*/];
                 }
@@ -205,7 +205,7 @@ var NotesController = /** @class */ (function () {
                     case 0: return [4 /*yield*/, this.notesService.dropTable()];
                     case 1:
                         result = _a.sent();
-                        res.status(result.status).send(result.data).json;
+                        res.status(Number(result.status)).send(result.data).json;
                         return [2 /*return*/];
                 }
             });
