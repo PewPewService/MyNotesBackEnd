@@ -79,7 +79,10 @@ class Server {
                     rejectUnauthorized: false,
                 },
             },*/
-            ssl: { rejectUnauthorized: false },
+            ssl: {
+                require: "true",
+                rejectUnauthorized: false 
+            },
         });
 
         this.NotesController = new NotesController();
