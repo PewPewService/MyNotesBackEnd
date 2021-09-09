@@ -80,7 +80,7 @@ class Server {
                 },
             },*/
             ssl: {
-                require: "true",
+                require: true,
                 rejectUnauthorized: false 
             },
         });
