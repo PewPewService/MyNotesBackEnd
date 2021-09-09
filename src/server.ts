@@ -73,9 +73,12 @@ class Server {
             entities: [ConnEntities],
             synchronize: ConnSync,
             name: ConnName,
-            ssl: {
-                rejectUnauthorized: false,
-            }
+            ssl: true,
+            extra: {
+                ssl: {
+                    rejectUnauthorized: false,
+                },
+            },
             //ssl: true,//{ rejectUnauthorized: false },
         });
 
