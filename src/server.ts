@@ -53,14 +53,14 @@ class Server {
 
     public async routes() {
         const ConnType : any = String(process.env.NODE_CONNECTION_TYPE);
-        const ConnHost = String(process.env.NODE_CONNECTION_HOST);
-        const ConnPort = Number(process.env.NODE_CONNECTION_PORT);
-        const ConnUser = String(process.env.NODE_CONNECTION_USER);
-        const ConnPassword = String(process.env.NODE_CONNECTION_PASSWORD);
-        const ConnDB = String(process.env.NODE_CONNECTION_DB);
-        const ConnEntities = String(process.env.NODE_CONNECTION_ENTITIES);
-        const ConnSync = Boolean(process.env.NODE_CONNECTION_SYNCHRONIZE);
-        const ConnName = String(process.env.NODE_CONNECTION_NAME);
+        const ConnHost : any = String(process.env.NODE_CONNECTION_HOST);
+        const ConnPort : any = Number(process.env.NODE_CONNECTION_PORT);
+        const ConnUser : any = String(process.env.NODE_CONNECTION_USER);
+        const ConnPassword : any = String(process.env.NODE_CONNECTION_PASSWORD);
+        const ConnDB : any = String(process.env.NODE_CONNECTION_DB);
+        const ConnEntities : any = String(process.env.NODE_CONNECTION_ENTITIES);
+        const ConnSync : any = Boolean(process.env.NODE_CONNECTION_SYNCHRONIZE);
+        const ConnName : any = String(process.env.NODE_CONNECTION_NAME);
 
 
         await createConnection({
