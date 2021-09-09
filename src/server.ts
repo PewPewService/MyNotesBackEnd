@@ -21,7 +21,7 @@ class Server {
         this.bodyParser = require('body-parser');
         this.configuration();
         this.routes();
-        this.WebSocket = new WebSocket();
+        //this.WebSocket = new WebSocket();
     }
 
     public configuration() {
@@ -73,7 +73,7 @@ class Server {
             entities: [ConnEntities],
             synchronize: ConnSync,
             name: ConnName,
-            ssl: { rejectUnauthorized: false },
+            //ssl: { rejectUnauthorized: false },
         });
 
         this.NotesController = new NotesController();

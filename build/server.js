@@ -43,7 +43,6 @@ var express_1 = __importDefault(require("express"));
 var notes_controller_1 = require("./controllers/notes.controller");
 var typeorm_1 = require("typeorm");
 var users_controller_1 = require("./controllers/users.controller");
-var websocket_server_1 = require("./websocket-server");
 var path_1 = __importDefault(require("path"));
 var dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config({ path: '.env.' + process.env.MODE });
@@ -53,7 +52,7 @@ var Server = /** @class */ (function () {
         this.bodyParser = require('body-parser');
         this.configuration();
         this.routes();
-        this.WebSocket = new websocket_server_1.WebSocket();
+        //this.WebSocket = new WebSocket();
     }
     Server.prototype.configuration = function () {
         this.app.set('port', process.env.PORT || 3000);
