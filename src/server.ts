@@ -2,7 +2,7 @@ import express, { NextFunction, Request, Response } from 'express';
 import { NotesController } from './controllers/notes.controller';
 import { createConnection } from 'typeorm';
 import { UsersConrtoller } from './controllers/users.controller';
-//import { WebSocket } from './websocket-server';
+import { WebSocket } from './websocket-server';
 import path from 'path';
 import dotenv from 'dotenv';
 
@@ -11,7 +11,7 @@ dotenv.config({ path: '.env.' + process.env.MODE });
 class Server {
     private NotesController!: NotesController;
     private UsersController!: UsersConrtoller;
-    //private WebSocket!: WebSocket;
+    private WebSocket!: WebSocket;
 
     private bodyParser;
     private app: express.Application;
@@ -21,7 +21,7 @@ class Server {
         this.bodyParser = require('body-parser');
         this.configuration();
         this.routes();
-        //this.WebSocket = new WebSocket();
+        this.WebSocket = new WebSocket();
     }
 
     public configuration() {
@@ -73,16 +73,13 @@ class Server {
             entities: [ConnEntities],
             synchronize: ConnSync,
             name: ConnName,
-            /*ssl: true,
-            extra: {
-                ssl: {
-                    rejectUnauthorized: false,
-                },
-            },*/
+            //ssl: true,
+            //extra: {
             ssl: {
                 require: true,
-                rejectUnauthorized: false 
+                rejectUnauthorized: false,
             },
+            //},
         });
 
         this.NotesController = new NotesController();

@@ -43,6 +43,7 @@ var express_1 = __importDefault(require("express"));
 var notes_controller_1 = require("./controllers/notes.controller");
 var typeorm_1 = require("typeorm");
 var users_controller_1 = require("./controllers/users.controller");
+//import { WebSocket } from './websocket-server';
 var path_1 = __importDefault(require("path"));
 var dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config({ path: '.env.' + process.env.MODE });
@@ -105,7 +106,13 @@ var Server = /** @class */ (function () {
                                 entities: [ConnEntities],
                                 synchronize: ConnSync,
                                 name: ConnName,
-                                //ssl: { rejectUnauthorized: false },
+                                //ssl: true,
+                                //extra: {
+                                ssl: {
+                                    require: true,
+                                    rejectUnauthorized: false,
+                                },
+                                //},
                             })];
                     case 1:
                         _a.sent();
